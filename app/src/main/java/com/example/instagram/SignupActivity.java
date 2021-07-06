@@ -47,8 +47,8 @@ public class SignupActivity extends AppCompatActivity {
         user.setPassword(password);
         user.setEmail(email);
         user.signUpInBackground(e -> {
-            if (e == null) {
-                Log.d(TAG,"Signup failed");
+            if (e != null) {
+                Log.d(TAG,"Signup failed",e);
                 Toast.makeText(SignupActivity.this,"Signup failed.",Toast.LENGTH_SHORT).show();
             } else {
                 loginUser(username,password);
