@@ -19,7 +19,6 @@ import com.example.instagram.models.Post;
 import com.example.instagram.R;
 import com.example.instagram.databinding.ActivityPostBinding;
 import com.parse.ParseFile;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.io.File;
@@ -41,12 +40,6 @@ public class PostActivity extends AppCompatActivity {
         app = ActivityPostBinding.inflate(getLayoutInflater());
         View view = app.getRoot();
         setContentView(view);
-
-        app.btnLogout.setOnClickListener(v->{
-            ParseUser.logOut();
-            Intent i = new Intent(this,LoginActivity.class);
-            startActivity(i);
-        });
 
         app.btnSubmit.setOnClickListener(v -> {
             String description = app.etDescription.getText().toString();

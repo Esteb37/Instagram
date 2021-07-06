@@ -2,7 +2,7 @@ package com.example.instagram.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import com.example.instagram.adapters.PostsAdapter;
 import com.example.instagram.databinding.ActivityMainBinding;
 import com.example.instagram.models.Post;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,15 +41,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
         });
 
-        app.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                queryPosts();
-            }
-        });
+        app.swipeContainer.setOnRefreshListener(this::queryPosts);
 
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(this, allPosts);
@@ -59,6 +52,13 @@ public class MainActivity extends AppCompatActivity {
         app.rvPosts.setLayoutManager(new LinearLayoutManager(this));
         // query posts from Parstagram
         queryPosts();
+
+
+        app.btnLogout.setOnClickListener(v->{
+            ParseUser.logOut();
+            Intent i = new Intent(this,LoginActivity.class);
+            startActivity(i);
+        });
 
     }
 

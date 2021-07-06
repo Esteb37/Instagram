@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.instagram.R;
-import com.example.instagram.databinding.ActivityPostBinding;
 import com.example.instagram.databinding.ItemPostBinding;
 import com.example.instagram.models.Post;
 
@@ -17,8 +15,8 @@ import java.util.List;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostHolder> {
 
-    private Context context;
-    private List<Post> posts;
+    private final Context context;
+    private final List<Post> posts;
     ItemPostBinding app;
 
     public PostsAdapter(Context context, List<Post> posts) {
