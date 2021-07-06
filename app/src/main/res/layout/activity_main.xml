@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_lock_power_off" />
+        app:srcCompat="@android:drawable/ic_lock_power_off"
+        android:contentDescription="@string/logout" />
 
     <EditText
         android:id="@+id/etDescription"
@@ -22,27 +23,29 @@
         android:height="100dp"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="Description..."
+        android:hint="@string/description"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogout" />
+        app:layout_constraintTop_toBottomOf="@+id/btnLogout"
+        android:autofillHints="" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/ivPicture"
         android:layout_width="0dp"
         android:layout_height="300dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etPicture"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        app:layout_constraintTop_toBottomOf="@+id/btnPicture"
+        tools:srcCompat="@tools:sample/backgrounds/scenic"
+        android:contentDescription="@string/post_image" />
 
     <Button
-        android:id="@+id/etPicture"
+        android:id="@+id/btnPicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Take Picture"
+        android:text="@string/take_picture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etDescription" />
@@ -51,9 +54,9 @@
         android:id="@+id/btnSubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit"
+        android:text="@string/submit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/ivPicture" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
