@@ -1,9 +1,9 @@
-package com.example.instagram;
+package com.example.instagram.activities;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,20 +13,21 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.instagram.databinding.ActivityMainBinding;
+import com.example.instagram.models.Post;
+import com.example.instagram.R;
+import com.example.instagram.databinding.ActivityPostBinding;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity {
+public class PostActivity extends AppCompatActivity {
 
-    ActivityMainBinding app;
-    public static final  String TAG = "MainActivity";
+    ActivityPostBinding app;
+    public static final  String TAG = "PostActivity";
 
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 37;
     public String photoFileName = "photo.jpg";
@@ -35,9 +36,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_post);
 
-        app = ActivityMainBinding.inflate(getLayoutInflater());
+        app = ActivityPostBinding.inflate(getLayoutInflater());
         View view = app.getRoot();
         setContentView(view);
 
@@ -47,12 +48,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
         });
 
-        queryPosts();
-
         app.btnSubmit.setOnClickListener(v -> {
             String description = app.etDescription.getText().toString();
             if(description.isEmpty()){
-                Toast.makeText(MainActivity.this,"Description can't be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostActivity.this,"Description can't be empty", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -60,9 +59,7 @@ public class MainActivity extends AppCompatActivity {
             savePost(description,currentUser,photoFile);
         });
 
-        app.btnPicture.setOnClickListener(v->{
-            launchCamera();
-        });
+        app.btnPicture.setOnClickListener(v-> launchCamera());
     }
 
     private void savePost(String description, ParseUser currentUser, File photoFile) {
@@ -71,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         post.setUser(currentUser);
 
         if(photoFile==null || app.ivPicture.getDrawable() == null){
-            Toast.makeText(MainActivity.this, "There is no image!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PostActivity.this, "There is no image!", Toast.LENGTH_SHORT).show();
             return;
         }
         post.setImage(new ParseFile(photoFile));
@@ -79,30 +76,15 @@ public class MainActivity extends AppCompatActivity {
         post.saveInBackground(e -> {
            if(e != null){
               Log.d(TAG,"Error while saving",e);
-              Toast.makeText(MainActivity.this,"Unable to save post",Toast.LENGTH_SHORT).show();
+              Toast.makeText(PostActivity.this,"Unable to save post",Toast.LENGTH_SHORT).show();
               return;
            }
-           Toast.makeText(MainActivity.this, "Post saved successfully.", Toast.LENGTH_SHORT).show();
-           app.etDescription.setText("");
-           app.ivPicture.setImageResource(0);
+           Toast.makeText(PostActivity.this, "Post saved successfully.", Toast.LENGTH_SHORT).show();
+           finish();
         });
     }
 
-    private void queryPosts(){
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        query.include(Post.KEY_USER);
-        query.findInBackground((posts, e) -> {
-            if(e!=null){
-                Log.d(TAG,"Issue with getting posts",e);
-                return;
-            }
-
-            for(Post post : posts){
-                Log.i(TAG,"Post: "+post.getDescription()+", username: "+post.getUser().getUsername());
-            }
-        });
-    }
-
+    @SuppressLint("QueryPermissionsNeeded")
     public void launchCamera() {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -112,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         // wrap File object into a content provider
         // required for API >= 24
         // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
-        Uri fileProvider = FileProvider.getUriForFile(MainActivity.this, "com.codepath.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(PostActivity.this, "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
@@ -120,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         // Start the image capture intent to take photo
         if (intent.resolveActivity(getPackageManager()) != null)
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
     }
 
     @Override
