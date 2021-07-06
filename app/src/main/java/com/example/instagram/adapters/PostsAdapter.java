@@ -19,9 +19,20 @@ public class PostsAdapter extends RecyclerView.Adapter<PostHolder> {
     private final List<Post> posts;
     ItemPostBinding app;
 
-    public PostsAdapter(Context context, List<Post> posts) {
+
+    //Listener for recyclerview item click
+    public interface OnClickListener {
+
+        //Return clicked position
+        void onItemClicked(int position);
+    }
+
+    OnClickListener clickListener;
+
+    public PostsAdapter(Context context, List<Post> posts, OnClickListener clickListener) {
         this.context = context;
         this.posts = posts;
+        this.clickListener = clickListener;
     }
 
     @NonNull
@@ -31,7 +42,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostHolder> {
         app = ItemPostBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false);
         View view = app.getRoot();
 
-        return new PostHolder(view,context,app);
+        return new PostHolder(view,context,app,clickListener);
     }
 
     @Override

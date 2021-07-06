@@ -16,6 +16,8 @@ import com.example.instagram.models.Post;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +45,14 @@ public class MainActivity extends AppCompatActivity {
 
         app.swipeContainer.setOnRefreshListener(this::queryPosts);
 
+        PostsAdapter.OnClickListener clickListener = position -> {
+            Intent i = new Intent(MainActivity.this,DetailsActivity.class);
+            i.putExtra("post", Parcels.wrap(allPosts.get(position)));
+            startActivity(i);
+        };
+
         allPosts = new ArrayList<>();
-        adapter = new PostsAdapter(this, allPosts);
+        adapter = new PostsAdapter(this, allPosts,clickListener);
 
         // set the adapter on the recycler view
         app.rvPosts.setAdapter(adapter);

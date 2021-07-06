@@ -16,10 +16,12 @@ class PostHolder extends RecyclerView.ViewHolder {
     ItemPostBinding app;
     Context context;
 
-    public PostHolder(@NonNull View itemView, Context context, ItemPostBinding app) {
+    public PostHolder(@NonNull View itemView, Context context, ItemPostBinding app, PostsAdapter.OnClickListener clickListener) {
         super(itemView);
         this.context = context;
         this.app = app;
+
+        itemView.setOnClickListener(v -> clickListener.onItemClicked(getAdapterPosition()));
 
     }
 
