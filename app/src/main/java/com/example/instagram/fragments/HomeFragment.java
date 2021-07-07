@@ -37,7 +37,6 @@ public class HomeFragment extends Fragment {
     FragmentHomeBinding app;
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
-    RecyclerView rvPosts;
 
     int page = 0;
 
@@ -63,13 +62,14 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        app = FragmentHomeBinding.inflate(inflater, container, false);
+        return app.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        app = FragmentHomeBinding.inflate(getLayoutInflater());
+
         context = view.getContext();
 
         app.swipeContainer.setOnRefreshListener(() -> {
@@ -84,29 +84,31 @@ public class HomeFragment extends Fragment {
         };
 
         PostsAdapter.OnScrollListener scrollListener = position -> {
-            Log.i(TAG, String.valueOf(position));
             if (position >= allPosts.size() - 1) {
+
                 queryPosts(++page);
+                Log.d(TAG,"Loading page:"+page);
             }
         };
 
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(context, allPosts, clickListener, scrollListener);
 
-        rvPosts = view.findViewById(R.id.rvPosts);
-
         LinearLayoutManager manager = new LinearLayoutManager(context);
-        // set the layout manager on the recycler view
-        rvPosts.setLayoutManager(manager);
+
 
         // set the adapter on the recycler view
-        rvPosts.setAdapter(adapter);
+        app.rvPosts.setAdapter(adapter);
+
+        // set the layout manager on the recycler view
+        app.rvPosts.setLayoutManager(manager);
 
         // query posts from Parstagram
         queryPosts(0);
 
 
     }
+
 
     private void queryPosts(int page) {
 
@@ -116,7 +118,7 @@ public class HomeFragment extends Fragment {
         query.include(Post.KEY_USER);
         // limit query to latest 20 items
 
-        final int limit = 20;
+        final int limit = 2;
         query.setLimit(limit);
 
         query.setSkip(limit*page);

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
-        app.bottomNavigation.setOnNavigationItemReselectedListener(item -> {
+        app.bottomNavigation.setOnNavigationItemSelectedListener(item -> {
             Fragment fragment = new Fragment();
 
             switch(item.getItemId()){
@@ -44,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
             fragmentManager.beginTransaction().replace(R.id.flContainer,fragment).commit();
+            return true;
         });
+        app.bottomNavigation.setSelectedItemId(R.id.actionHome);
     }
 
 

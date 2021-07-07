@@ -28,13 +28,11 @@ class PostHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Post post) {
-
         app.tvDescription.setText(post.getDescription());
         app.tvUsername.setText(post.getUser().getUsername());
         ParseFile image = post.getImage();
         if(image != null){
             Glide.with(context).load(image.getUrl()).into(app.ivContent);
         }
-        Log.d(HomeFragment.TAG,"binding");
     }
 }

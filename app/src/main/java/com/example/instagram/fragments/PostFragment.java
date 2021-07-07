@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -22,7 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+
 import com.example.instagram.R;
+import com.example.instagram.databinding.FragmentHomeBinding;
 import com.example.instagram.databinding.FragmentPostBinding;
 import com.example.instagram.models.Post;
 import com.parse.ParseFile;
@@ -63,7 +66,8 @@ public class PostFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_post, container, false);
+        app = FragmentPostBinding.inflate(inflater, container, false);
+        return app.getRoot();
     }
 
     @Override
@@ -71,7 +75,7 @@ public class PostFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
 
-        app = FragmentPostBinding.inflate(getLayoutInflater());
+
         context = getContext();
 
         app.btnSubmit.setOnClickListener(v -> {
@@ -106,7 +110,10 @@ public class PostFragment extends Fragment {
                 return;
             }
             Toast.makeText(context, "Post saved successfully.", Toast.LENGTH_SHORT).show();
-            requireActivity().getFragmentManager().popBackStack();
+
+            final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+            fragmentManager.beginTransaction().replace(R.id.flContainer,new HomeFragment()).commit();
         });
     }
 
@@ -134,6 +141,7 @@ public class PostFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 // by this point we have the camera photo on disk
@@ -141,6 +149,7 @@ public class PostFragment extends Fragment {
                 // RESIZE BITMAP, see section below
                 // Load the taken image into a preview
                 app.ivPost.setImageBitmap(takenImage);
+                app.ivPost.setVisibility(View.VISIBLE);
             } else { // Result was a failure
                 Toast.makeText(context, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
