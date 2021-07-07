@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
 
+    int page = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +45,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
         });
 
-        app.swipeContainer.setOnRefreshListener(this::queryPosts);
+        app.swipeContainer.setOnRefreshListener(() -> {
+            page = 0;
+            queryPosts(page);
+        });
 
         PostsAdapter.OnClickListener clickListener = position -> {
             Intent i = new Intent(MainActivity.this,DetailsActivity.class);
@@ -51,15 +56,22 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
         };
 
+        PostsAdapter.OnScrollListener scrollListener = position ->{
+            Log.i(TAG, String.valueOf(position));
+            if(position>=allPosts.size()-1){
+                queryPosts(++page);
+            }
+        };
+
         allPosts = new ArrayList<>();
-        adapter = new PostsAdapter(this, allPosts,clickListener);
+        adapter = new PostsAdapter(this, allPosts,clickListener,scrollListener);
 
         // set the adapter on the recycler view
         app.rvPosts.setAdapter(adapter);
         // set the layout manager on the recycler view
         app.rvPosts.setLayoutManager(new LinearLayoutManager(this));
         // query posts from Parstagram
-        queryPosts();
+        queryPosts(0);
 
 
         app.btnLogout.setOnClickListener(v->{
@@ -71,13 +83,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void queryPosts() {
+
+    private void queryPosts(int page) {
         // specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         // include data referred by user key
         query.include(Post.KEY_USER);
         // limit query to latest 20 items
-        query.setLimit(20);
+
+        final int limit = 20;
+        query.setLimit(limit);
+
+        query.setSkip(limit*page);
+
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
         // start an asynchronous call for posts
@@ -89,13 +107,10 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            // for debugging purposes let's print every post description to logcat
-            for (Post post : posts) {
-                Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
+            if(page==0){
+                adapter.clear();
             }
 
-            // Remember to CLEAR OUT old items before appending in the new ones
-            adapter.clear();
             // ...the data has come back, add new items to your adapter...
             adapter.addAll(posts);
 
@@ -103,5 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
     }
+
+
 
 }

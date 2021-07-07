@@ -29,10 +29,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostHolder> {
 
     OnClickListener clickListener;
 
-    public PostsAdapter(Context context, List<Post> posts, OnClickListener clickListener) {
+    public interface OnScrollListener {
+
+        //Return clicked position
+        void onScroll(int position);
+    }
+
+    OnScrollListener scrollListener;
+
+    public PostsAdapter(Context context, List<Post> posts, OnClickListener clickListener, OnScrollListener scrollListener) {
         this.context = context;
         this.posts = posts;
         this.clickListener = clickListener;
+        this.scrollListener = scrollListener;
     }
 
     @NonNull
@@ -49,6 +58,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostHolder> {
     public void onBindViewHolder(@NonNull PostHolder holder, int position) {
         Post post = posts.get(position);
         holder.bind(post);
+        if (scrollListener != null)  scrollListener.onScroll(position);
     }
 
     @Override
