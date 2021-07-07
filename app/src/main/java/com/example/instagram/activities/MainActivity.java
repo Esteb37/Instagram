@@ -10,7 +10,8 @@ import android.os.Bundle;
 import android.view.View;
 import com.example.instagram.R;
 import com.example.instagram.databinding.ActivityMainBinding;
-
+import com.example.instagram.fragments.HomeFragment;
+import com.example.instagram.fragments.PostFragment;
 
 
 public class MainActivity extends AppCompatActivity {
