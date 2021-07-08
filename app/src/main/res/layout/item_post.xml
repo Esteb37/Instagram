@@ -122,6 +122,67 @@
         app:srcCompat="@drawable/ufi_save_icon"
         app:tint="#FFFFFF" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clLikedBy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/btnLike"
+        app:layout_constraintTop_toBottomOf="@+id/btnLike"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Liked by"
+            android:textColor="#FFFFFF"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvUserLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/textView10"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="estebanpadilla" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clLikedOthers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/tvUserLike"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tvLikes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/textView3"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="5 others" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="and"
+                android:textColor="#FFFFFF"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/tvUsername2"
         android:layout_width="wrap_content"
@@ -131,7 +192,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/btnLike"
-        app:layout_constraintTop_toBottomOf="@+id/btnLike"
+        app:layout_constraintTop_toBottomOf="@+id/clLikedBy"
         tools:text="Esteban" />
 
     <TextView
@@ -163,6 +224,7 @@
         tools:text="22 mins ago" />
 
     <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
@@ -173,4 +235,5 @@
         app:layout_constraintStart_toEndOf="@+id/ivProfilePicture2"
         app:layout_constraintTop_toTopOf="@+id/ivProfilePicture2"
         app:layout_constraintVertical_bias="1.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

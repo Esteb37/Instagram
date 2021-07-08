@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.databinding.ItemPostBinding;
 import com.example.instagram.models.Post;
+import com.parse.ParseException;
 
 import java.util.List;
 
@@ -57,7 +58,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostHolder> {
     @Override
     public void onBindViewHolder(@NonNull PostHolder holder, int position) {
         Post post = mPosts.get(position);
-        holder.bind(post);
+        try {
+            holder.bind(post);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         if (mScrollListener != null)  mScrollListener.onScroll(position);
     }
 
