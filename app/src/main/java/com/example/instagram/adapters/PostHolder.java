@@ -17,11 +17,11 @@ import com.parse.ParseUser;
 class PostHolder extends RecyclerView.ViewHolder {
 
     ItemPostBinding app;
-    Context context;
+    Context mContext;
 
-    public PostHolder(@NonNull View itemView, Context context, ItemPostBinding app, PostsAdapter.OnClickListener clickListener) {
+    public PostHolder(@NonNull View itemView, Context mContext, ItemPostBinding app, PostsAdapter.OnClickListener clickListener) {
         super(itemView);
-        this.context = context;
+        this.mContext = mContext;
         this.app = app;
 
         itemView.setOnClickListener(v -> clickListener.onItemClicked(getAdapterPosition()));
@@ -35,14 +35,14 @@ class PostHolder extends RecyclerView.ViewHolder {
         app.tvTimestamp.setText(Post.calculateTimeAgo(post.getCreatedAt()));
         ParseFile image = post.getImage();
         if(image != null){
-            Glide.with(context)
+            Glide.with(mContext)
                     .load(image.getUrl())
                     .into(app.ivContent);
         }
 
         ParseFile profilePicture = post.getProfilePicture();
         if(profilePicture != null) {
-            Glide.with(context)
+            Glide.with(mContext)
                     .load(profilePicture.getUrl())
                     .transform(new RoundedCorners(100), new CenterCrop())
                     .into(app.ivProfilePicture);
@@ -50,7 +50,7 @@ class PostHolder extends RecyclerView.ViewHolder {
         ParseUser currentUser = ParseUser.getCurrentUser();
         ParseFile currentProfile = currentUser.getParseFile("profilePicture");
         if(currentProfile != null){
-            Glide.with(context)
+            Glide.with(mContext)
                     .load(currentProfile.getUrl())
                     .transform(new RoundedCorners(100),new CenterCrop())
                     .into(app.ivProfilePicture2);

@@ -16,7 +16,7 @@ import org.parceler.Parcels;
 public class DetailsActivity extends AppCompatActivity {
 
     ActivityDetailsBinding app;
-    Post post;
+    Post mPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +27,13 @@ public class DetailsActivity extends AppCompatActivity {
         View view = app.getRoot();
         setContentView(view);
 
-        post = Parcels.unwrap(getIntent().getParcelableExtra("post"));
+        mPost = Parcels.unwrap(getIntent().getParcelableExtra("mPost"));
 
-        app.tvDescription.setText(post.getDescription());
-        app.tvUsername.setText(post.getUser().getUsername());
-        String timeAgo = Post.calculateTimeAgo(post.getCreatedAt());
+        app.tvDescription.setText(mPost.getDescription());
+        app.tvUsername.setText(mPost.getUser().getUsername());
+        String timeAgo = Post.calculateTimeAgo(mPost.getCreatedAt());
         app.tvTimestamp.setText(timeAgo);
-        ParseFile image = post.getImage();
+        ParseFile image = mPost.getImage();
         if(image != null){
             Glide.with(this).load(image.getUrl()).into(app.ivContent);
         }

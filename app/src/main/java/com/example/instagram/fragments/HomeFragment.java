@@ -33,12 +33,12 @@ public class HomeFragment extends Fragment {
     public static final String TAG = "HomeFragment";
 
     FragmentHomeBinding app;
-    protected PostsAdapter adapter;
-    protected List<Post> allPosts;
+    protected PostsAdapter mAdapter;
+    protected List<Post> mPosts;
 
-    int page = 0;
+    int mPage = 0;
 
-    Context context;
+    Context mContext;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -68,35 +68,35 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        context = view.getContext();
+        mContext = view.getContext();
 
         app.swipeContainer.setOnRefreshListener(() -> {
-            page = 0;
-            queryPosts(page);
+            mPage = 0;
+            queryPosts(mPage);
         });
 
         PostsAdapter.OnClickListener clickListener = position -> {
-            Intent i = new Intent(context, DetailsActivity.class);
-            i.putExtra("post", Parcels.wrap(allPosts.get(position)));
+            Intent i = new Intent(mContext, DetailsActivity.class);
+            i.putExtra("post", Parcels.wrap(mPosts.get(position)));
             startActivity(i);
         };
 
         PostsAdapter.OnScrollListener scrollListener = position -> {
-            if (position >= allPosts.size() - 1) {
+            if (position >= mPosts.size() - 1) {
 
-                queryPosts(++page);
-                Log.d(TAG,"Loading page:"+page);
+                queryPosts(++mPage);
+                Log.d(TAG,"Loading mPage:"+mPage);
             }
         };
 
-        allPosts = new ArrayList<>();
-        adapter = new PostsAdapter(context, allPosts, clickListener, scrollListener);
+        mPosts = new ArrayList<>();
+        mAdapter = new PostsAdapter(mContext, mPosts, clickListener, scrollListener);
 
-        LinearLayoutManager manager = new LinearLayoutManager(context);
+        LinearLayoutManager manager = new LinearLayoutManager(mContext);
 
 
-        // set the adapter on the recycler view
-        app.rvPosts.setAdapter(adapter);
+        // set the mAdapter on the recycler view
+        app.rvPosts.setAdapter(mAdapter);
 
         // set the layout manager on the recycler view
         app.rvPosts.setLayoutManager(manager);
@@ -108,7 +108,7 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private void queryPosts(int page) {
+    private void queryPosts(int mPage) {
 
         // specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
@@ -119,7 +119,7 @@ public class HomeFragment extends Fragment {
         final int limit = 2;
         query.setLimit(limit);
 
-        query.setSkip(limit*page);
+        query.setSkip(limit*mPage);
 
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
@@ -132,12 +132,12 @@ public class HomeFragment extends Fragment {
                 return;
             }
 
-            if(page==0){
-                adapter.clear();
+            if(mPage==0){
+                mAdapter.clear();
             }
 
-            // ...the data has come back, add new items to your adapter...
-            adapter.addAll(posts);
+            // ...the data has come back, add new items to your mAdapter...
+            mAdapter.addAll(posts);
 
             app.swipeContainer.setRefreshing(false);
 

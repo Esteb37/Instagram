@@ -15,8 +15,8 @@ import java.util.List;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostHolder> {
 
-    private final Context context;
-    private final List<Post> posts;
+    private final Context mContext;
+    private final List<Post> mPosts;
     ItemPostBinding app;
 
 
@@ -27,7 +27,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostHolder> {
         void onItemClicked(int position);
     }
 
-    OnClickListener clickListener;
+    OnClickListener mClickListener;
 
     public interface OnScrollListener {
 
@@ -35,13 +35,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostHolder> {
         void onScroll(int position);
     }
 
-    OnScrollListener scrollListener;
+    OnScrollListener mScrollListener;
 
     public PostsAdapter(Context context, List<Post> posts, OnClickListener clickListener, OnScrollListener scrollListener) {
-        this.context = context;
-        this.posts = posts;
-        this.clickListener = clickListener;
-        this.scrollListener = scrollListener;
+        mContext = context;
+        mPosts = posts;
+        mClickListener = clickListener;
+        mScrollListener = scrollListener;
     }
 
     @NonNull
@@ -51,30 +51,30 @@ public class PostsAdapter extends RecyclerView.Adapter<PostHolder> {
         app = ItemPostBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false);
         View view = app.getRoot();
 
-        return new PostHolder(view,context,app,clickListener);
+        return new PostHolder(view,mContext,app,mClickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PostHolder holder, int position) {
-        Post post = posts.get(position);
+        Post post = mPosts.get(position);
         holder.bind(post);
-        if (scrollListener != null)  scrollListener.onScroll(position);
+        if (mScrollListener != null)  mScrollListener.onScroll(position);
     }
 
     @Override
     public int getItemCount() {
-        return posts.size();
+        return mPosts.size();
     }
 
     // Clean all elements of the recycler
     public void clear() {
-        posts.clear();
+        mPosts.clear();
         notifyDataSetChanged();
     }
 
     // Add a list of items -- change to type used
     public void addAll(List<Post> list) {
-        posts.addAll(list);
+        mPosts.addAll(list);
         notifyDataSetChanged();
     }
 

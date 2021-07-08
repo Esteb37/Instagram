@@ -39,13 +39,13 @@ import java.io.File;
 public class PostFragment extends Fragment {
 
     FragmentPostBinding app;
-    public static final  String TAG = "PostFragment";
 
-    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 37;
-    public String photoFileName = "photo.jpg";
-    private File photoFile;
+    public static final String TAG = "PostFragment";
+    public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 37;
+    public static final String FILE_NAME = "photo.jpg";
 
-    Context context;
+    private File mPhotoFile;
+    Context mContext;
 
     /*public static PostFragment newInstance() {
         PostFragment fragment = new PostFragment();
@@ -76,40 +76,40 @@ public class PostFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        context = getContext();
+        mContext = getContext();
 
         app.btnSubmit.setOnClickListener(v -> {
             String description = app.etDescription.getText().toString();
             if(description.isEmpty()){
-                Toast.makeText(context,"Description can't be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,"Description can't be empty", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             ParseUser currentUser = ParseUser.getCurrentUser();
-            savePost(description,currentUser,photoFile);
+            savePost(description,currentUser,mPhotoFile);
         });
 
         app.btnPicture.setOnClickListener(v-> launchCamera());
     }
 
-    private void savePost(String description, ParseUser currentUser, File photoFile) {
+    private void savePost(String description, ParseUser currentUser, File mPhotoFile) {
         Post post = new Post();
         post.setDescription(description);
         post.setUser(currentUser);
 
-        if(photoFile==null || app.ivPost.getDrawable() == null){
-            Toast.makeText(context, "There is no image!", Toast.LENGTH_SHORT).show();
+        if(mPhotoFile==null || app.ivPost.getDrawable() == null){
+            Toast.makeText(mContext, "There is no image!", Toast.LENGTH_SHORT).show();
             return;
         }
-        post.setImage(new ParseFile(photoFile));
+        post.setImage(new ParseFile(mPhotoFile));
 
         post.saveInBackground(e -> {
             if(e != null){
                 Log.d(TAG,"Error while saving",e);
-                Toast.makeText(context,"Unable to save post",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,"Unable to save post",Toast.LENGTH_SHORT).show();
                 return;
             }
-            Toast.makeText(context, "Post saved successfully.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Post saved successfully.", Toast.LENGTH_SHORT).show();
 
             final FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
 
@@ -122,18 +122,18 @@ public class PostFragment extends Fragment {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Create a File reference for future access
-        photoFile = getPhotoFileUri(photoFileName);
+        mPhotoFile = getPhotoFileUri(FILE_NAME);
 
         // wrap File object into a content provider
         // required for API >= 24
         // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
-        Uri fileProvider = FileProvider.getUriForFile(context, "com.codepath.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(mContext, "com.codepath.fileprovider", mPhotoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
         // So as long as the result is not null, it's safe to use the intent.
         // Start the image capture intent to take photo
-        if (intent.resolveActivity(context.getPackageManager()) != null)
+        if (intent.resolveActivity(mContext.getPackageManager()) != null)
             //noinspection deprecation
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 
@@ -147,13 +147,13 @@ public class PostFragment extends Fragment {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 // by this point we have the camera photo on disk
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                Bitmap takenImage = BitmapFactory.decodeFile(mPhotoFile.getAbsolutePath());
                 // RESIZE BITMAP, see section below
                 // Load the taken image into a preview
                 app.ivPost.setImageBitmap(takenImage);
                 app.ivPost.setVisibility(View.VISIBLE);
             } else { // Result was a failure
-                Toast.makeText(context, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -164,7 +164,7 @@ public class PostFragment extends Fragment {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
         // This way, we don't need to request external read/write runtime permissions.
-        File mediaStorageDir = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
+        File mediaStorageDir = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
