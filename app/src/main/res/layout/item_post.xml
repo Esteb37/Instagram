@@ -3,42 +3,153 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/dark"
+    android:paddingBottom="20dp">
 
     <TextView
         android:id="@+id/tvUsername"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/ivProfilePicture"
+        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/ivProfilePicture"
+        app:layout_constraintTop_toTopOf="@+id/ivProfilePicture"
+        app:layout_constraintVertical_bias="0.444"
         tools:text="Esteban" />
 
     <ImageView
         android:id="@+id/ivContent"
         android:layout_width="0dp"
-        android:layout_height="250dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/content"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvUsername"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/content" />
+        app:layout_constraintTop_toBottomOf="@+id/ivProfilePicture"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/ivProfilePicture"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="47dp"
+        android:layout_height="43dp"
+        android:backgroundTint="#00989898"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/ivProfilePicture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ivProfilePicture"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/media_option_button"
+        app:tint="#FFFFFF" />
+
+    <ImageButton
+        android:id="@+id/btnLike"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
+        android:background="#00FFFFFF"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="@+id/ivProfilePicture"
+        app:layout_constraintTop_toBottomOf="@+id/ivContent"
+        app:srcCompat="@drawable/ufi_heart"
+        app:tint="#FFFFFF" />
+
+    <ImageButton
+        android:id="@+id/btnComment"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="#00FFFFFF"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/btnLike"
+        app:layout_constraintStart_toEndOf="@+id/btnLike"
+        app:layout_constraintTop_toTopOf="@+id/btnLike"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ufi_comment"
+        app:tint="#FFFFFF" />
+
+    <ImageButton
+        android:id="@+id/imageButton4"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="20dp"
+        android:background="#00FFFFFF"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/btnComment"
+        app:layout_constraintStart_toEndOf="@+id/btnComment"
+        app:layout_constraintTop_toTopOf="@+id/btnComment"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ufi_new_direct"
+        app:tint="#FFFFFF" />
+
+    <ImageButton
+        android:id="@+id/imageButton5"
+        android:layout_width="25dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:background="#00FFFFFF"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="@+id/tvDescription"
+        app:layout_constraintTop_toTopOf="@+id/imageButton4"
+        app:srcCompat="@drawable/ufi_save_icon"
+        app:tint="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/tvUsername2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/btnLike"
+        app:layout_constraintTop_toBottomOf="@+id/btnLike"
+        tools:text="Esteban" />
 
     <TextView
         android:id="@+id/tvDescription"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center_vertical"
         android:text="@string/description"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvUsername2"
         app:layout_constraintEnd_toEndOf="@+id/ivContent"
-        app:layout_constraintStart_toStartOf="@+id/ivContent"
-        app:layout_constraintTop_toBottomOf="@+id/ivContent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/tvUsername2"
+        app:layout_constraintTop_toTopOf="@+id/tvUsername2"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tvTimestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="#AAAAAA"
+        android:textColorHint="#C3C3C3"
+        app:layout_constraintStart_toStartOf="@+id/tvUsername2"
+        app:layout_constraintTop_toBottomOf="@+id/tvUsername2"
+        tools:text="22 mins ago" />
 </androidx.constraintlayout.widget.ConstraintLayout>

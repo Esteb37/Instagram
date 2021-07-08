@@ -4,19 +4,22 @@
     <item
         android:id="@+id/actionHome"
         android:enabled="true"
-        android:icon="@drawable/instagram_home_filled_24"
+        android:icon="@drawable/instagram_home_outline_24"
+        android:iconTint="#FFFFFF"
         android:title="@string/Home"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/actionPost"
         android:enabled="true"
-        android:icon="@drawable/instagram_new_post_filled_24"
+        android:icon="@drawable/instagram_new_post_outline_24"
+        android:iconTint="#FFFFFF"
         android:title="@string/post"
         app:showAsAction="always" />
     <item
         android:id="@+id/actionProfile"
         android:enabled="true"
-        android:icon="@drawable/instagram_user_filled_24"
+        android:icon="@drawable/instagram_user_outline_24"
+        android:iconTint="#FFFFFF"
         android:title="@string/profile"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 </menu>

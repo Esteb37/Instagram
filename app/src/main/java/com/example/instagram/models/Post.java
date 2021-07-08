@@ -16,6 +16,7 @@ public class Post extends ParseObject implements Parcelable {
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_IMAGE = "image";
     public static final String KEY_USER = "user";
+    public static final String KEY_PROFILE_PICTURE = "profilePicture";
 
     public String getDescription(){
         return getString(KEY_DESCRIPTION);
@@ -40,6 +41,8 @@ public class Post extends ParseObject implements Parcelable {
     public void setUser(ParseUser user){
         put(KEY_USER,user);
     }
+
+    public ParseFile getProfilePicture(){ return getUser().getParseFile(KEY_PROFILE_PICTURE);}
 
     public static String calculateTimeAgo(Date createdAt) {
 
