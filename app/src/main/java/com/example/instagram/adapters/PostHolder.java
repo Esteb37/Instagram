@@ -14,6 +14,7 @@ import com.example.instagram.databinding.ItemPostBinding;
 import com.example.instagram.fragments.HomeFragment;
 import com.example.instagram.models.Post;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 class PostHolder extends RecyclerView.ViewHolder {
 
@@ -42,11 +43,19 @@ class PostHolder extends RecyclerView.ViewHolder {
         }
 
         ParseFile profilePicture = post.getProfilePicture();
-        if(profilePicture != null){
+        if(profilePicture != null) {
             Glide.with(context)
                     .load(profilePicture.getUrl())
-                    .transform(new RoundedCorners(100),new CenterCrop())
+                    .transform(new RoundedCorners(100), new CenterCrop())
                     .into(app.ivProfilePicture);
+        }
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        ParseFile currentProfile = currentUser.getParseFile("profilePicture");
+        if(currentProfile != null){
+            Glide.with(context)
+                    .load(currentProfile.getUrl())
+                    .transform(new RoundedCorners(100),new CenterCrop())
+                    .into(app.ivProfilePicture2);
         }
     }
 }

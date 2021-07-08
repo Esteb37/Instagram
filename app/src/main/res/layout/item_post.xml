@@ -46,6 +46,15 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
+    <ImageView
+        android:id="@+id/ivProfilePicture2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="@+id/tvUsername2"
+        app:layout_constraintTop_toBottomOf="@+id/tvUsername2"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="47dp"
@@ -149,7 +158,19 @@
         android:layout_marginTop="10dp"
         android:textColor="#AAAAAA"
         android:textColorHint="#C3C3C3"
-        app:layout_constraintStart_toStartOf="@+id/tvUsername2"
-        app:layout_constraintTop_toBottomOf="@+id/tvUsername2"
+        app:layout_constraintStart_toStartOf="@+id/ivProfilePicture2"
+        app:layout_constraintTop_toBottomOf="@+id/ivProfilePicture2"
         tools:text="22 mins ago" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:gravity="center_vertical"
+        android:text="Add a comment..."
+        android:textColor="#B6B6B6"
+        app:layout_constraintBottom_toBottomOf="@+id/ivProfilePicture2"
+        app:layout_constraintStart_toEndOf="@+id/ivProfilePicture2"
+        app:layout_constraintTop_toTopOf="@+id/ivProfilePicture2"
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

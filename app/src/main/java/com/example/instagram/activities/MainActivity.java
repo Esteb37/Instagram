@@ -1,11 +1,13 @@
 package com.example.instagram.activities;
 
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +15,7 @@ import com.example.instagram.R;
 import com.example.instagram.databinding.ActivityMainBinding;
 import com.example.instagram.fragments.HomeFragment;
 import com.example.instagram.fragments.PostFragment;
+import com.parse.ParseUser;
 
 import java.util.Objects;
 
@@ -32,6 +35,17 @@ public class MainActivity extends AppCompatActivity {
 
         Objects.requireNonNull(app.bottomNavigation).setBackgroundColor(getResources().getColor(R.color.dark));
 
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.toolbar);
+
+        findViewById(R.id.btnLogout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser.logOut();
+                Intent i = new Intent(MainActivity.this,LoginActivity.class);
+                startActivity(i);
+            }
+        });
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -56,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
         app.bottomNavigation.setSelectedItemId(R.id.actionHome);
+
+
     }
 
 
