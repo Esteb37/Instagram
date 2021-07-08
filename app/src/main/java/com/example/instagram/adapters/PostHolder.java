@@ -1,7 +1,6 @@
 package com.example.instagram.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -11,7 +10,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.instagram.databinding.ItemPostBinding;
-import com.example.instagram.fragments.HomeFragment;
 import com.example.instagram.models.Post;
 import com.parse.ParseFile;
 import com.parse.ParseUser;

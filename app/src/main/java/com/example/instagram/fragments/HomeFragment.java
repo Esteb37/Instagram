@@ -8,14 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.instagram.R;
 import com.example.instagram.activities.DetailsActivity;
 import com.example.instagram.adapters.PostsAdapter;
 import com.example.instagram.databinding.FragmentHomeBinding;
@@ -60,7 +58,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         app = FragmentHomeBinding.inflate(inflater, container, false);
         return app.getRoot();

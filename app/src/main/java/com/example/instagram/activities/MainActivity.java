@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentManager;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import com.example.instagram.R;
@@ -20,6 +19,7 @@ import com.parse.ParseUser;
 import java.util.Objects;
 
 
+@SuppressWarnings("deprecation")
 public class MainActivity extends AppCompatActivity {
 
    ActivityMainBinding app;
@@ -35,16 +35,13 @@ public class MainActivity extends AppCompatActivity {
 
         Objects.requireNonNull(app.bottomNavigation).setBackgroundColor(getResources().getColor(R.color.dark));
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.toolbar);
 
-        findViewById(R.id.btnLogout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ParseUser.logOut();
-                Intent i = new Intent(MainActivity.this,LoginActivity.class);
-                startActivity(i);
-            }
+        findViewById(R.id.btnLogout).setOnClickListener(v -> {
+            ParseUser.logOut();
+            Intent i = new Intent(MainActivity.this,LoginActivity.class);
+            startActivity(i);
         });
 
         final FragmentManager fragmentManager = getSupportFragmentManager();

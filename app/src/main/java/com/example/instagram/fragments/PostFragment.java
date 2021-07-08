@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 
 import com.example.instagram.R;
-import com.example.instagram.databinding.FragmentHomeBinding;
 import com.example.instagram.databinding.FragmentPostBinding;
 import com.example.instagram.models.Post;
 import com.parse.ParseFile;
@@ -34,6 +33,7 @@ import com.parse.ParseUser;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+
 
 
 public class PostFragment extends Fragment {
@@ -64,7 +64,7 @@ public class PostFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         app = FragmentPostBinding.inflate(inflater, container, false);
         return app.getRoot();
@@ -111,7 +111,7 @@ public class PostFragment extends Fragment {
             }
             Toast.makeText(context, "Post saved successfully.", Toast.LENGTH_SHORT).show();
 
-            final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            final FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
 
             fragmentManager.beginTransaction().replace(R.id.flContainer,new HomeFragment()).commit();
         });
@@ -134,10 +134,12 @@ public class PostFragment extends Fragment {
         // So as long as the result is not null, it's safe to use the intent.
         // Start the image capture intent to take photo
         if (intent.resolveActivity(context.getPackageManager()) != null)
+            //noinspection deprecation
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
