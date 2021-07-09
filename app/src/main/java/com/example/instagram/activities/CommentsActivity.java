@@ -1,17 +1,23 @@
 package com.example.instagram.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.instagram.R;
 import com.example.instagram.adapters.comments.CommentsAdapter;
 import com.example.instagram.databinding.ActivityCommentsBinding;
 import com.example.instagram.models.Comment;
 import com.example.instagram.models.Post;
 import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -49,25 +55,36 @@ public class CommentsActivity extends AppCompatActivity {
         mComments = new ArrayList<>();
         mAdapter = new CommentsAdapter(CommentsActivity.this,mComments);
 
+        app.rvComments.setLayoutManager(new LinearLayoutManager(CommentsActivity.this));
+        app.rvComments.setAdapter(mAdapter);
+
         app.btnPost.setOnClickListener(v -> {
-            Comment comment = new Comment();
+            Comment comment = (Comment) ParseObject.create("Comment");
             comment.setContent(Objects.requireNonNull(app.etComment.getText()).toString());
             comment.setUser(mCurrentUser);
             comment.setPost(mCurrentPost);
 
             comment.saveInBackground(e -> {
                 if(e==null){
-                    Log.d(TAG,"Comment added");
+                    mCurrentPost.addComment(comment);
                 } else {
                     e.printStackTrace();
                 }
             });
         });
 
+        ParseFile profilePicture = mCurrentUser.getParseFile("profilePicture");
+        Glide.with(CommentsActivity.this)
+            .load(profilePicture.getUrl())
+            .transform(new RoundedCorners(100), new CenterCrop())
+            .into(app.ivProfilePicture);
         loadComments();
     }
 
     void loadComments(){
-        mAdapter.addAll(mCurrentPost.getComments());
+        List<Comment> comments = mCurrentPost.getComments();
+        if(comments!=null) {
+            mAdapter.addAll(comments);
+        }
     }
 }

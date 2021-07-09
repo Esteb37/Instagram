@@ -27,7 +27,7 @@ public class DetailsActivity extends AppCompatActivity {
         View view = app.getRoot();
         setContentView(view);
 
-        mPost = Parcels.unwrap(getIntent().getParcelableExtra("mPost"));
+        mPost = Parcels.unwrap(getIntent().getParcelableExtra("post"));
 
         app.tvDescription.setText(mPost.getDescription());
         app.tvUsername.setText(mPost.getUser().getUsername());

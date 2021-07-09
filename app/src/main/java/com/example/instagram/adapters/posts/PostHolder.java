@@ -2,6 +2,7 @@ package com.example.instagram.adapters.posts;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 
@@ -12,11 +13,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.instagram.R;
+import com.example.instagram.activities.CommentsActivity;
 import com.example.instagram.databinding.ItemPostBinding;
+import com.example.instagram.models.Comment;
 import com.example.instagram.models.Post;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -71,11 +76,6 @@ class PostHolder extends RecyclerView.ViewHolder {
                     .into(app.ivProfilePicture2);
         }
 
-
-
-
-
-
         app.btnLike.setOnClickListener(v -> {
             if(post.isLikedByUser(mCurrentUser)) {
                 app.btnLike.setImageResource(R.drawable.ufi_heart);
@@ -92,6 +92,13 @@ class PostHolder extends RecyclerView.ViewHolder {
             }
 
         });
+
+        app.btnComment.setOnClickListener(v -> {
+            Intent i = new Intent(mContext, CommentsActivity.class);
+            i.putExtra("post",Parcels.wrap(mPost));
+            mContext.startActivity(i);
+        });
+
     }
 
     @SuppressLint("DefaultLocale")

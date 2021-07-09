@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/dark">
 
     <ImageView
@@ -12,10 +12,12 @@
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="@string/profile"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/profile" />
+        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tvUsername"
@@ -66,11 +68,11 @@
         android:layout_height="20dp"
         android:layout_marginEnd="20dp"
         android:background="#00FFFFFF"
+        android:contentDescription="@string/like"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@+id/ivProfilePicture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ivProfilePicture"
         app:srcCompat="@drawable/ufi_heart"
-        app:tint="#CCCCCC"
-        android:contentDescription="@string/like" />
+        app:tint="#CCCCCC" />
 </androidx.constraintlayout.widget.ConstraintLayout>

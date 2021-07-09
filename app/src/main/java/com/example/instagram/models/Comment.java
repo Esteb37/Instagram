@@ -1,14 +1,18 @@
 package com.example.instagram.models;
 
+import android.os.Parcelable;
 import android.util.Log;
 
+import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.util.Date;
 
-public class Comment extends ParseObject {
+@ParseClassName("Comment")
+public class Comment extends ParseObject implements Parcelable {
 
     public static final String KEY_CONTENT = "content";
     public static final String KEY_USER = "user";
