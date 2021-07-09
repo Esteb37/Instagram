@@ -45,7 +45,7 @@ public class CommentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
 
-        mCurrentUser = User.fromParseUser(ParseUser.getCurrentUser());
+        mCurrentUser = User.getCurrentUser();
 
         mCurrentPost = Parcels.unwrap(getIntent().getParcelableExtra("post"));
 

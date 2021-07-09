@@ -11,17 +11,21 @@ import java.util.List;
 
 public class User extends ParseUser implements Parcelable {
 
-    public static final String KEY_LIKES = "likes";
-    public static final String KEY_FOLLOWING = "following";
-    public static final String KEY_FOLLOWERS = "followers";
-    public static final String KEY_BIO = "bio";
-    public static final String KEY_NAME = "name";
-    public static final String KEY_POSTS = "posts";
-    public static final String KEY_PROFILE_PICTURE = "profilePicture";
-    public static final String TAG = "User";
+    private static final String KEY_LIKES = "likes";
+    private static final String KEY_FOLLOWING = "following";
+    private static final String KEY_FOLLOWERS = "followers";
+    private static final String KEY_BIO = "bio";
+    private static final String KEY_NAME = "name";
+    private static final String KEY_POSTS = "posts";
+    private static final String KEY_PROFILE_PICTURE = "profilePicture";
+    private static final String TAG = "User";
 
     public static User fromParseUser(ParseUser user){
         return (User) user;
+    }
+
+    public static User getCurrentUser(){
+        return fromParseUser(ParseUser.getCurrentUser());
     }
 
     public List<Post> getLikes() {

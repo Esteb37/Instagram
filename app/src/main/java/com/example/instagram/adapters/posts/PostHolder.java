@@ -40,7 +40,7 @@ class PostHolder extends RecyclerView.ViewHolder {
         mContext = context;
         app = binder;
 
-        mCurrentUser = User.fromParseUser(ParseUser.getCurrentUser());
+        mCurrentUser = User.getCurrentUser();
 
         itemView.setOnClickListener(v -> clickListener.onItemClicked(getAdapterPosition()));
 

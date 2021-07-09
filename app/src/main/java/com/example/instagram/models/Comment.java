@@ -4,8 +4,6 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import com.parse.ParseClassName;
-import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -14,12 +12,9 @@ import java.util.Date;
 @ParseClassName("Comment")
 public class Comment extends ParseObject implements Parcelable {
 
-    public static final String KEY_CONTENT = "content";
-    public static final String KEY_USER = "user";
-    public static final String KEY_POST = "post";
-    public static final String KEY_PROFILE_PICTURE = "profilePicture";
-
-    public static final String TAG = "Comment";
+    private static final String KEY_CONTENT = "content";
+    private static final String KEY_USER = "user";
+    private static final String KEY_POST = "post";
 
     public void setContent(String content){
         put(KEY_CONTENT,content);
@@ -43,10 +38,6 @@ public class Comment extends ParseObject implements Parcelable {
 
     public void setUser(User user){
         put(KEY_USER,(ParseUser) user);
-    }
-
-    public ParseFile getProfilePicture(){
-        return getUser().getParseFile(KEY_PROFILE_PICTURE);
     }
 
     public static String calculateTimeAgo(Date createdAt) {

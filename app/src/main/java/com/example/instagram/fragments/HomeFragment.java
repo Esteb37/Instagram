@@ -66,7 +66,7 @@ public class HomeFragment extends Fragment {
 
         mContext = view.getContext();
 
-        mCurrentUser = User.fromParseUser(ParseUser.getCurrentUser());
+        mCurrentUser = User.getCurrentUser();
 
         setupRefreshListener();
 
@@ -119,7 +119,7 @@ public class HomeFragment extends Fragment {
         // specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         // include data referred by user key
-        query.include(Post.KEY_USER);
+        query.include("user");
         // limit query to latest 20 items
 
         final int limit = 10;

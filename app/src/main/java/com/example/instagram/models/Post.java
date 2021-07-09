@@ -8,6 +8,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -15,12 +16,11 @@ import java.util.Objects;
 @ParseClassName("Post")
 public class Post extends ParseObject implements Parcelable {
 
-    public static final String KEY_DESCRIPTION = "description";
-    public static final String KEY_IMAGE = "image";
-    public static final String KEY_USER = "user";
-    public static final String KEY_PROFILE_PICTURE = "profilePicture";
-    public static final String KEY_LIKES = "likes";
-    public static final String KEY_COMMENTS = "comments";
+    private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_IMAGE = "image";
+    private static final String KEY_USER = "user";
+    private static final String KEY_LIKES = "likes";
+    private static final String KEY_COMMENTS = "comments";
 
     public static final String TAG = "Post";
 
@@ -76,13 +76,16 @@ public class Post extends ParseObject implements Parcelable {
         comments.add(comment);
         setComments(comments);
     }
+
     public User getUserLike() {
         return User.fromParseUser((ParseUser) Objects.requireNonNull(getList("userLikes")).get(0));
     }
 
     public void addLike(User user){
         List<User> userLikes = getList("userLikes");
-        assert userLikes != null;
+        if(userLikes==null){
+            userLikes = new ArrayList<>();
+        }
         userLikes.add(user);
         put("userLikes",userLikes);
         setLikes(getLikes()+1);
@@ -109,6 +112,7 @@ public class Post extends ParseObject implements Parcelable {
     public boolean isLikedByUser(User user){
         return Objects.requireNonNull(user.getLikes()).contains(this);
     }
+
     public static String calculateTimeAgo(Date createdAt) {
 
         int SECOND_MILLIS = 1000;

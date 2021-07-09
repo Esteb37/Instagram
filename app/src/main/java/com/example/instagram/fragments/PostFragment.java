@@ -72,7 +72,7 @@ public class PostFragment extends Fragment {
 
         mContext = getContext();
 
-        mCurrentUser = User.fromParseUser(ParseUser.getCurrentUser());
+        mCurrentUser = User.getCurrentUser();
 
         setSubmitListener();
 

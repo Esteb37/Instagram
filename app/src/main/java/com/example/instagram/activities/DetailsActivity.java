@@ -37,13 +37,13 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.item_post);
 
+        setupLayout();
+
         mPost = Parcels.unwrap(getIntent().getParcelableExtra("post"));
 
-        mCurrentUser = User.fromParseUser(ParseUser.getCurrentUser());
+        mCurrentUser = User.getCurrentUser();
 
         loadDetails();
-
-        setupLayout();
 
         loadUserDetails();
 
