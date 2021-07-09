@@ -24,4 +24,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="like">like</string>
     <string name="reply">Reply</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="logo">Logo</string>
+    <string name="forgot_your_login_details">Forgot your login details?</string>
+    <string name="get_help_loggin_in">Get help loggin in.</string>
+    <string name="or">OR</string>
+    <string name="login_with_facebook">Login with Facebook</string>
 </resources>
