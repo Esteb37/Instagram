@@ -19,7 +19,9 @@ import com.example.instagram.adapters.posts.PostsAdapter;
 import com.example.instagram.databinding.FragmentHomeBinding;
 import com.example.instagram.models.Comment;
 import com.example.instagram.models.Post;
+import com.example.instagram.models.User;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 
 import org.jetbrains.annotations.NotNull;
@@ -33,25 +35,18 @@ public class HomeFragment extends Fragment {
 
     public static final String TAG = "HomeFragment";
 
-    FragmentHomeBinding app;
-    protected PostsAdapter mAdapter;
-    protected List<Post> mPosts;
+    private FragmentHomeBinding app;
+    private PostsAdapter mAdapter;
+    private List<Post> mPosts;
+    private Context mContext;
+    private int mPage = 0;
+    private User mCurrentUser;
 
-    int mPage = 0;
 
-    Context mContext;
 
     public HomeFragment() {
         // Required empty public constructor
     }
-
-
-    /*public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,10 +66,25 @@ public class HomeFragment extends Fragment {
 
         mContext = view.getContext();
 
+        mCurrentUser = User.fromParseUser(ParseUser.getCurrentUser());
+
+        setupRefreshListener();
+
+        setupRecyclerView();
+
+        // query posts from Parstagram
+        queryPosts(0);
+
+
+    }
+
+    private void setupRefreshListener(){
         app.swipeContainer.setOnRefreshListener(() -> {
             mPage = 0;
             queryPosts(mPage);
         });
+    }
+    private void setupRecyclerView(){
 
         PostsAdapter.OnClickListener clickListener = position -> {
             Intent i = new Intent(mContext, DetailsActivity.class);
@@ -101,11 +111,6 @@ public class HomeFragment extends Fragment {
 
         // set the layout manager on the recycler view
         app.rvPosts.setLayoutManager(manager);
-
-        // query posts from Parstagram
-        queryPosts(0);
-
-
     }
 
 
@@ -117,7 +122,7 @@ public class HomeFragment extends Fragment {
         query.include(Post.KEY_USER);
         // limit query to latest 20 items
 
-        final int limit = 2;
+        final int limit = 10;
         query.setLimit(limit);
 
         query.setSkip(limit*mPage);

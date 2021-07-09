@@ -15,6 +15,7 @@ import com.example.instagram.databinding.ActivityMainBinding;
 import com.example.instagram.fragments.HomeFragment;
 import com.example.instagram.fragments.PostFragment;
 import com.example.instagram.fragments.ProfileFragment;
+import com.example.instagram.models.User;
 import com.parse.ParseUser;
 
 import java.util.Objects;
@@ -23,13 +24,24 @@ import java.util.Objects;
 @SuppressWarnings("deprecation")
 public class MainActivity extends AppCompatActivity {
 
-   ActivityMainBinding app;
-
+    ActivityMainBinding app;
+    User mCurrentUser;
     @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mCurrentUser = User.fromParseUser(ParseUser.getCurrentUser());
+        setupLayout();
+
+        setLogoutListener();
+
+        setupNavigation();
+
+    }
+
+
+    private void setupLayout(){
         app = ActivityMainBinding.inflate(getLayoutInflater());
         View view = app.getRoot();
         setContentView(view);
@@ -38,12 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.toolbar_main);
+    }
 
-        findViewById(R.id.btnLogout).setOnClickListener(v -> {
-            ParseUser.logOut();
-            Intent i = new Intent(MainActivity.this,LoginActivity.class);
-            startActivity(i);
-        });
+    private void setupNavigation(){
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -62,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.actionProfile:
                     fragment = new ProfileFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putParcelable("user", ParseUser.getCurrentUser());
+                    bundle.putParcelable("user", mCurrentUser);
                     fragment.setArguments(bundle);
                     app.bottomNavigation.getMenu().findItem(R.id.actionProfile).setIcon(R.drawable.instagram_user_filled_24);
                     break;
@@ -71,8 +80,14 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
         app.bottomNavigation.setSelectedItemId(R.id.actionHome);
+    }
 
-
+    private void setLogoutListener(){
+        findViewById(R.id.btnLogout).setOnClickListener(v -> {
+            ParseUser.logOut();
+            Intent i = new Intent(MainActivity.this,LoginActivity.class);
+            startActivity(i);
+        });
     }
 
 

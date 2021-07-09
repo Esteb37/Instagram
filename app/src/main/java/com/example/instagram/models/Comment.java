@@ -37,12 +37,12 @@ public class Comment extends ParseObject implements Parcelable {
         return (Post) getParseObject(KEY_POST);
     }
 
-    public ParseUser getUser(){
-        return getParseUser(KEY_USER);
+    public User getUser(){
+        return User.fromParseUser(getParseUser(KEY_USER));
     }
 
-    public void setUser(ParseUser user){
-        put(KEY_USER,user);
+    public void setUser(User user){
+        put(KEY_USER,(ParseUser) user);
     }
 
     public ParseFile getProfilePicture(){

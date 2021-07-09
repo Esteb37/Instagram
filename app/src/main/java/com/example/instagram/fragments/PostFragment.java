@@ -27,13 +27,14 @@ import android.widget.Toast;
 import com.example.instagram.R;
 import com.example.instagram.databinding.FragmentPostBinding;
 import com.example.instagram.models.Post;
+import com.example.instagram.models.User;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-
+import java.util.List;
 
 
 public class PostFragment extends Fragment {
@@ -46,13 +47,7 @@ public class PostFragment extends Fragment {
 
     private File mPhotoFile;
     Context mContext;
-
-    /*public static PostFragment newInstance() {
-        PostFragment fragment = new PostFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }*/
+    User mCurrentUser;
 
     public PostFragment() {
         // Required empty public constructor
@@ -75,9 +70,16 @@ public class PostFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
 
-
         mContext = getContext();
 
+        mCurrentUser = User.fromParseUser(ParseUser.getCurrentUser());
+
+        setSubmitListener();
+
+        app.btnPicture.setOnClickListener(v-> launchCamera());
+    }
+
+    private void setSubmitListener(){
         app.btnSubmit.setOnClickListener(v -> {
             String description = app.etDescription.getText().toString();
             if(description.isEmpty()){
@@ -85,17 +87,13 @@ public class PostFragment extends Fragment {
                 return;
             }
 
-            ParseUser currentUser = ParseUser.getCurrentUser();
-            savePost(description,currentUser,mPhotoFile);
+            savePost(description,mPhotoFile);
         });
-
-        app.btnPicture.setOnClickListener(v-> launchCamera());
     }
-
-    private void savePost(String description, ParseUser currentUser, File mPhotoFile) {
+    private void savePost(String description, File mPhotoFile) {
         Post post = new Post();
         post.setDescription(description);
-        post.setUser(currentUser);
+        post.setUser(mCurrentUser);
 
         if(mPhotoFile==null || app.ivPost.getDrawable() == null){
             Toast.makeText(mContext, "There is no image!", Toast.LENGTH_SHORT).show();
@@ -109,7 +107,10 @@ public class PostFragment extends Fragment {
                 Toast.makeText(mContext,"Unable to save post",Toast.LENGTH_SHORT).show();
                 return;
             }
+
             Toast.makeText(mContext, "Post saved successfully.", Toast.LENGTH_SHORT).show();
+
+            mCurrentUser.addPost(post);
 
             final FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
 

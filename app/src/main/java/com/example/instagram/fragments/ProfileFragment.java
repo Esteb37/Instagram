@@ -1,9 +1,7 @@
 package com.example.instagram.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.example.instagram.activities.DetailsActivity;
 import com.example.instagram.adapters.images.ImageAdapter;
-import com.example.instagram.databinding.FragmentHomeBinding;
 import com.example.instagram.databinding.FragmentProfileBinding;
 import com.example.instagram.models.Post;
+import com.example.instagram.models.User;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -35,14 +30,11 @@ public class ProfileFragment extends Fragment {
 
     public static final String TAG = "ProfileFragment";
 
-    FragmentProfileBinding app;
-    protected ImageAdapter mAdapter;
-    protected List<Post> mPosts;
-    ParseUser mUser;
+    private FragmentProfileBinding app;
+    private User mUser;
+    private int mPage = 0;
+    private Context mContext;
 
-    int mPage = 0;
-
-    Context mContext;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -68,7 +60,6 @@ public class ProfileFragment extends Fragment {
 
         mContext = view.getContext();
 
-
         /*ImageAdapter.OnClickListener clickListener = position -> {
             Intent i = new Intent(mContext, DetailsActivity.class);
             i.putExtra("post", Parcels.wrap(mPosts.get(position)));
@@ -83,8 +74,17 @@ public class ProfileFragment extends Fragment {
             }
         };*/
 
-        mPosts = new ArrayList<>();
-        mAdapter = new ImageAdapter(mContext, mPosts);
+        setupRecyclerView();
+
+        loadProfileDetails();
+
+        queryPosts(0);
+    }
+
+    private void setupRecyclerView(){
+
+        List<Post> mPosts = new ArrayList<>();
+        ImageAdapter mAdapter = new ImageAdapter(mContext, mPosts);
 
         GridLayoutManager manager = new GridLayoutManager(mContext,3);
 
@@ -94,11 +94,38 @@ public class ProfileFragment extends Fragment {
 
         // set the layout manager on the recycler view
         app.rvPosts.setLayoutManager(manager);
+    }
 
-        // query posts from Parstagram
-        queryPosts(0);
+    private void queryPosts(int mPage) {
 
-        ParseFile profilePicture = mUser.getParseFile("profilePicture");
+        List<Post> postPointers = mUser.getList("posts");
+        List<Post> posts = new ArrayList<>();
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+
+        /*for(pointer : postPointers) {
+            query.getInBackground(pointer.get (post, e) -> {
+                // check for errors
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting posts", e);
+
+                    return;
+                }
+
+                if(mPage==0){
+                    mAdapter.clear();
+                }
+
+                // ...the data has come back, add new items to your mAdapter...
+                mAdapter.addAll(posts);
+
+
+
+            });*/
+
+    }
+
+    private void loadProfileDetails(){
+        ParseFile profilePicture = mUser.getProfilePicture();
         if(profilePicture != null){
             Glide.with(mContext)
                     .load(profilePicture.getUrl())
@@ -106,48 +133,10 @@ public class ProfileFragment extends Fragment {
                     .into(app.ivProfilePicture);
         }
 
-        app.tvBio.setText(mUser.getString("bio"));
-        app.tvName.setText(mUser.getString("name"));
-        app.tvFollowers.setText(String.valueOf(mUser.getInt("followers")));
-        app.tvFollowing.setText(String.valueOf(mUser.getInt("following")));
-
-    }
-
-
-    private void queryPosts(int mPage) {
-
-        // specify what type of data we want to query - Post.class
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        // include data referred by user key
-        query.include(Post.KEY_USER);
-        // limit query to latest 20 items
-
-        final int limit = 2;
-        query.setLimit(limit);
-
-        query.setSkip(limit*mPage);
-
-        // order posts by creation date (newest first)
-        query.addDescendingOrder("createdAt");
-        // start an asynchronous call for posts
-        query.findInBackground((posts, e) -> {
-            // check for errors
-            if (e != null) {
-                Log.e(TAG, "Issue with getting posts", e);
-
-                return;
-            }
-
-            if(mPage==0){
-                mAdapter.clear();
-            }
-
-            // ...the data has come back, add new items to your mAdapter...
-            mAdapter.addAll(posts);
-
-
-
-        });
+        app.tvBio.setText(mUser.getBio());
+        app.tvName.setText(mUser.getName());
+        app.tvFollowers.setText(String.valueOf(mUser.getFollowers()));
+        app.tvFollowing.setText(String.valueOf(mUser.getFollowing()));
     }
 
 }

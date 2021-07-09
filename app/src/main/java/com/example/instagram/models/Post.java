@@ -40,16 +40,16 @@ public class Post extends ParseObject implements Parcelable {
         put(KEY_IMAGE,image);
     }
 
-    public ParseUser getUser(){
-        return getParseUser(KEY_USER);
+    public User getUser(){
+        return User.fromParseUser(getParseUser(KEY_USER));
     }
 
-    public void setUser(ParseUser user){
-        put(KEY_USER,user);
+    public void setUser(User user){
+        put(KEY_USER,(ParseUser) user);
     }
 
     public ParseFile getProfilePicture(){
-        return getUser().getParseFile(KEY_PROFILE_PICTURE);
+        return getUser().getProfilePicture();
     }
 
     public int getLikes(){
@@ -72,23 +72,24 @@ public class Post extends ParseObject implements Parcelable {
 
     public void addComment(Comment comment){
         List<Comment> comments = getComments();
+        assert comments != null;
         comments.add(comment);
         setComments(comments);
     }
-    public ParseUser getUserLike() {
-        return (ParseUser) Objects.requireNonNull(getList("userLikes")).get(0);
+    public User getUserLike() {
+        return User.fromParseUser((ParseUser) Objects.requireNonNull(getList("userLikes")).get(0));
     }
 
-    public void addLike(ParseUser user){
-        List<ParseUser> userLikes = getList("userLikes");
+    public void addLike(User user){
+        List<User> userLikes = getList("userLikes");
         assert userLikes != null;
         userLikes.add(user);
         put("userLikes",userLikes);
         setLikes(getLikes()+1);
     }
 
-    public void removeLike(ParseUser user){
-        List<ParseUser> userLikes = getList("userLikes");
+    public void removeLike(User user){
+        List<User> userLikes = getList("userLikes");
         assert userLikes != null;
         userLikes.remove(user);
         put("userLikes",userLikes);
@@ -105,8 +106,8 @@ public class Post extends ParseObject implements Parcelable {
         });
     }
 
-    public boolean isLikedByUser(ParseUser user){
-        return Objects.requireNonNull(user.getList("likes")).contains(this);
+    public boolean isLikedByUser(User user){
+        return Objects.requireNonNull(user.getLikes()).contains(this);
     }
     public static String calculateTimeAgo(Date createdAt) {
 
