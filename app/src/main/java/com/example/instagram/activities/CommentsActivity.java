@@ -1,11 +1,13 @@
 package com.example.instagram.activities;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -51,6 +53,10 @@ public class CommentsActivity extends AppCompatActivity {
         app = ActivityCommentsBinding.inflate(getLayoutInflater());
         View view = app.getRoot();
         setContentView(view);
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.toolbar_detail);
+        ((TextView) findViewById(R.id.tvTitle)).setText("Comments");
 
         mComments = new ArrayList<>();
         mAdapter = new CommentsAdapter(CommentsActivity.this,mComments);

@@ -14,6 +14,7 @@ import com.example.instagram.R;
 import com.example.instagram.databinding.ActivityMainBinding;
 import com.example.instagram.fragments.HomeFragment;
 import com.example.instagram.fragments.PostFragment;
+import com.example.instagram.fragments.ProfileFragment;
 import com.parse.ParseUser;
 
 import java.util.Objects;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(app.bottomNavigation).setBackgroundColor(getResources().getColor(R.color.dark));
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.toolbar);
+        getSupportActionBar().setCustomView(R.layout.toolbar_main);
 
         findViewById(R.id.btnLogout).setOnClickListener(v -> {
             ParseUser.logOut();
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     app.bottomNavigation.getMenu().findItem(R.id.actionPost).setIcon(R.drawable.instagram_new_post_filled_24);
                     break;
                 case R.id.actionProfile:
-                    fragment = new PostFragment();
+                    fragment = new ProfileFragment();
                     app.bottomNavigation.getMenu().findItem(R.id.actionProfile).setIcon(R.drawable.instagram_user_filled_24);
                     break;
             }
