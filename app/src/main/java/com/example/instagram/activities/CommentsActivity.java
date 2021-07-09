@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -18,8 +21,10 @@ import com.example.instagram.databinding.ActivityCommentsBinding;
 import com.example.instagram.models.Comment;
 import com.example.instagram.models.Post;
 import com.example.instagram.models.User;
+import com.parse.GetCallback;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
@@ -61,10 +66,14 @@ public class CommentsActivity extends AppCompatActivity {
     }
 
     private void loadComments(){
-        List<Comment> comments = mCurrentPost.getComments();
-        if(comments!=null) {
+
+        ParseQuery<Comment> query = ParseQuery.getQuery(Comment.class).whereContains("post",mCurrentPost.getObjectId());
+
+        query.addDescendingOrder("createdAt");
+
+        query.findInBackground((comments, e) ->{
             mAdapter.addAll(comments);
-        }
+        });
     }
 
     private void loadProfilePicture(){
@@ -86,6 +95,13 @@ public class CommentsActivity extends AppCompatActivity {
             comment.saveInBackground(e -> {
                 if(e==null){
                     mCurrentPost.addComment(comment);
+
+                    mComments.add(0,comment);
+                    mAdapter.notifyItemInserted(0);
+                    app.etComment.setText("");
+                    app.etComment.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) CommentsActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(app.tilComment.getWindowToken(), 0);
                 } else {
                     e.printStackTrace();
                 }

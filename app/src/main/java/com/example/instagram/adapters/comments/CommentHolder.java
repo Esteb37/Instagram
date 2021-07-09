@@ -11,6 +11,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.instagram.databinding.ItemCommentBinding;
 import com.example.instagram.models.Comment;
+import com.example.instagram.models.User;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.Parse;
@@ -37,40 +38,28 @@ public class CommentHolder extends RecyclerView.ViewHolder{
 
     }
 
+    public void bind(Comment comment) {
 
-    public void bind(Comment comment){
+
+        app.tvContent.setText(comment.getContent());
+        app.tvTimestamp.setText(Comment.calculateTimeAgo(comment.getCreatedAt()));
 
 
-        ParseQuery<Comment> query = ParseQuery.getQuery(Comment.class);
 
-        // start an asynchronous call for posts
-        query.getInBackground(comment.getObjectId(), (object, e) -> {
-            if(e==null){
+        ParseQuery<User> query = ParseQuery.getQuery(User.class);
 
-                app.tvContent.setText(object.getContent());
-                app.tvTimestamp.setText(Comment.calculateTimeAgo(object.getCreatedAt()));
-                ParseQuery<ParseUser> query2 = ParseQuery.getQuery(ParseUser.class);
+        query.getInBackground(comment.getUser().getObjectId(),(user, e )->{
+            app.tvUsername.setText(user.getUsername());
+            ParseFile profilePicture = user.getProfilePicture();
+            if (profilePicture != null) {
+                Glide.with(mContext)
+                        .load(profilePicture.getUrl())
+                        .transform(new RoundedCorners(100), new CenterCrop())
+                        .into(app.ivProfilePicture);
 
-                // start an asynchronous call for posts
-                query2.getInBackground(object.getUser().getObjectId(), (userObject, userE) -> {
-                    app.tvUsername.setText(userObject.getUsername());
-                    ParseFile profilePicture = userObject.getParseFile("profilePicture");
-                    if (profilePicture != null) {
-                        Glide.with(mContext)
-                                .load(profilePicture.getUrl())
-                                .transform(new RoundedCorners(100), new CenterCrop())
-                                .into(app.ivProfilePicture);
-                    } else {
-                        userE.printStackTrace();
-                    }
-                });
-            } else {
-                e.printStackTrace();
             }
         });
 
 
     }
-
-
 }
