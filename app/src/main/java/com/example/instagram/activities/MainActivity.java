@@ -61,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.actionProfile:
                     fragment = new ProfileFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("user", ParseUser.getCurrentUser());
+                    fragment.setArguments(bundle);
                     app.bottomNavigation.getMenu().findItem(R.id.actionProfile).setIcon(R.drawable.instagram_user_filled_24);
                     break;
             }
