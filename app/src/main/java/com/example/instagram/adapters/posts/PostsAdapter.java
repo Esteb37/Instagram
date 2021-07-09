@@ -1,4 +1,4 @@
-package com.example.instagram.adapters;
+package com.example.instagram.adapters.posts;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -1,5 +1,6 @@
-package com.example.instagram.adapters;
+package com.example.instagram.adapters.posts;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -28,10 +29,10 @@ class PostHolder extends RecyclerView.ViewHolder {
 
     public static final String TAG = "PostHolder";
 
-    public PostHolder(@NonNull View itemView, Context mContext, ItemPostBinding app, PostsAdapter.OnClickListener clickListener) {
+    public PostHolder(@NonNull View itemView, Context context, ItemPostBinding binder, PostsAdapter.OnClickListener clickListener) {
         super(itemView);
-        this.mContext = mContext;
-        this.app = app;
+        mContext = context;
+        app = binder;
 
         itemView.setOnClickListener(v -> clickListener.onItemClicked(getAdapterPosition()));
 
@@ -93,12 +94,13 @@ class PostHolder extends RecyclerView.ViewHolder {
         });
     }
 
+    @SuppressLint("DefaultLocale")
     private void showLikes(Post post) throws ParseException {
         if(post.getLikes()>0){
             app.tvUserLike.setText(post.getUserLike().fetchIfNeeded().getUsername());
             app.clLikedBy.setVisibility(View.VISIBLE);
             if(post.getLikes()>1){
-                app.tvLikes.setText(post.getLikes()-1+" others.");
+                app.tvLikes.setText(String.format("%d others.", post.getLikes() - 1));
                 app.clLikedOthers.setVisibility(View.VISIBLE);
             } else {
                 app.clLikedOthers.setVisibility(View.GONE);
@@ -122,6 +124,7 @@ class PostHolder extends RecyclerView.ViewHolder {
 
     public void likePost(Post post){
         List<Post> likedPosts = mCurrentUser.getList("likes");
+        assert likedPosts != null;
         likedPosts.add(post);
         mCurrentUser.put("likes",likedPosts);
         post.addLike(mCurrentUser);
@@ -132,6 +135,7 @@ class PostHolder extends RecyclerView.ViewHolder {
 
     public void unlikePost(Post post){
         List<Post> likedPosts = mCurrentUser.getList("likes");
+        assert likedPosts != null;
         likedPosts.remove(post);
         mCurrentUser.put("likes",likedPosts);
         post.removeLike(mCurrentUser);

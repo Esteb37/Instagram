@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.instagram.activities.DetailsActivity;
-import com.example.instagram.adapters.PostsAdapter;
+import com.example.instagram.adapters.posts.PostsAdapter;
 import com.example.instagram.databinding.FragmentHomeBinding;
 import com.example.instagram.models.Post;
 import com.parse.ParseQuery;

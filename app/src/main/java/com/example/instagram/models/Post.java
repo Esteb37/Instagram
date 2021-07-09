@@ -3,17 +3,14 @@ package com.example.instagram.models;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.parse.GetCallback;
 import com.parse.ParseClassName;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @ParseClassName("Post")
 public class Post extends ParseObject implements Parcelable {
@@ -23,6 +20,8 @@ public class Post extends ParseObject implements Parcelable {
     public static final String KEY_USER = "user";
     public static final String KEY_PROFILE_PICTURE = "profilePicture";
     public static final String KEY_LIKES = "likes";
+    public static final String KEY_COMMENTS = "comments";
+
     public static final String TAG = "Post";
 
     public String getDescription(){
@@ -57,18 +56,32 @@ public class Post extends ParseObject implements Parcelable {
         return getInt(KEY_LIKES);
     }
 
-    public ParseUser getUserLike() throws ParseException {
-        ParseUser user = (ParseUser) getList("userLikes").get(0);
-        return user;
-    }
-
     public void setLikes(int likes){
         put(KEY_LIKES,likes);
         update();
     }
 
+    public List<Comment> getComments(){
+        return getList(KEY_COMMENTS);
+    }
+
+    public void setComments(List<Comment> comments){
+        put(KEY_COMMENTS,comments);
+        update();
+    }
+
+    public void addComment(Comment comment){
+        List<Comment> comments = getComments();
+        comments.add(comment);
+        setComments(comments);
+    }
+    public ParseUser getUserLike() {
+        return (ParseUser) Objects.requireNonNull(getList("userLikes")).get(0);
+    }
+
     public void addLike(ParseUser user){
         List<ParseUser> userLikes = getList("userLikes");
+        assert userLikes != null;
         userLikes.add(user);
         put("userLikes",userLikes);
         setLikes(getLikes()+1);
@@ -76,27 +89,24 @@ public class Post extends ParseObject implements Parcelable {
 
     public void removeLike(ParseUser user){
         List<ParseUser> userLikes = getList("userLikes");
+        assert userLikes != null;
         userLikes.remove(user);
         put("userLikes",userLikes);
         setLikes(getLikes()-1);
     }
 
     public void update(){
-        this.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e == null){
-                    Log.d(TAG,"Post updated");
-                } else {
-                    e.printStackTrace();
-                }
+        this.saveInBackground(e -> {
+            if(e == null){
+                Log.d(TAG,"Post updated");
+            } else {
+                e.printStackTrace();
             }
         });
     }
 
     public boolean isLikedByUser(ParseUser user){
-        List<Post> list = user.getList("likes");
-        return user.getList("likes").contains(this);
+        return Objects.requireNonNull(user.getList("likes")).contains(this);
     }
     public static String calculateTimeAgo(Date createdAt) {
 
