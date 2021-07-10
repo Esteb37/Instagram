@@ -35,6 +35,8 @@ public class ProfileFragment extends Fragment {
     private int mPage = 0;
     private Context mContext;
 
+    List<Post> mPosts;
+    ImageAdapter mAdapter;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -83,8 +85,10 @@ public class ProfileFragment extends Fragment {
 
     private void setupRecyclerView(){
 
-        List<Post> mPosts = new ArrayList<>();
-        ImageAdapter mAdapter = new ImageAdapter(mContext, mPosts);
+
+
+        mPosts = new ArrayList<>();
+        mAdapter = new ImageAdapter(mContext, mPosts);
 
         GridLayoutManager manager = new GridLayoutManager(mContext,3);
 
@@ -98,29 +102,12 @@ public class ProfileFragment extends Fragment {
 
     private void queryPosts(int mPage) {
 
-        List<Post> postPointers = mUser.getList("posts");
-        List<Post> posts = new ArrayList<>();
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class).whereContains("user", mUser.getObjectId());
 
-        /*for(pointer : postPointers) {
-            query.getInBackground(pointer.get (post, e) -> {
-                // check for errors
-                if (e != null) {
-                    Log.e(TAG, "Issue with getting posts", e);
-
-                    return;
-                }
-
-                if(mPage==0){
-                    mAdapter.clear();
-                }
-
-                // ...the data has come back, add new items to your mAdapter...
-                mAdapter.addAll(posts);
-
-
-
-            });*/
+        query.findInBackground((posts, e) ->{
+            mAdapter.addAll(posts);
+            app.tvPosts.setText(String.valueOf(mPosts.size()));
+        });
 
     }
 
