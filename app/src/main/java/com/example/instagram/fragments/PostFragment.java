@@ -94,7 +94,7 @@ public class PostFragment extends Fragment {
         Post post = new Post();
         post.setDescription(description);
         post.setUser(mCurrentUser);
-
+        app.pbLoading.setVisibility(View.VISIBLE);
         if(mPhotoFile==null || app.ivPost.getDrawable() == null){
             Toast.makeText(mContext, "There is no image!", Toast.LENGTH_SHORT).show();
             return;
@@ -111,6 +111,8 @@ public class PostFragment extends Fragment {
             Toast.makeText(mContext, "Post saved successfully.", Toast.LENGTH_SHORT).show();
 
             mCurrentUser.addPost(post);
+
+            app.pbLoading.setVisibility(View.GONE);
 
             final FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
 
