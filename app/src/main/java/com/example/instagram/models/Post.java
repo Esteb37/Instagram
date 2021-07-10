@@ -72,7 +72,9 @@ public class Post extends ParseObject implements Parcelable {
 
     public void addComment(Comment comment){
         List<Comment> comments = getComments();
-        assert comments != null;
+        if(comments==null){
+            comments = new ArrayList<>();
+        }
         comments.add(comment);
         setComments(comments);
     }

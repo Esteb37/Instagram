@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -130,9 +131,10 @@ class PostHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private void loadPostDetails() throws ParseException {
+    private void loadPostDetails(){
 
         app.tvDescription.setText(mPost.getDescription());
+        Log.d(TAG,mPost.getObjectId());
         app.tvUsername.setText(mPost.getUser().getUsername());
         app.tvUsername2.setText(mPost.getUser().getUsername());
         app.tvTimestamp.setText(Post.calculateTimeAgo(mPost.getCreatedAt()));
