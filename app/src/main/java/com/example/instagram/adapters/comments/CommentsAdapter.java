@@ -17,31 +17,30 @@ import java.util.List;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentHolder> {
 
+    public static final String TAG = "CommentsAdapter";
+
     private final Context mContext;
+
     private final List<Comment> mComments;
-    ItemCommentBinding app;
 
     public CommentsAdapter(Context context, List<Comment> comments) {
         mContext = context;
         mComments = comments;
     }
 
-    @NonNull
     @NotNull
     @Override
     public CommentHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        app = ItemCommentBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false);
+        com.example.instagram.databinding.ItemCommentBinding app = ItemCommentBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         View view = app.getRoot();
 
-        return new CommentHolder(view,mContext,app);
+        return new CommentHolder(view,mContext, app);
     }
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull CommentHolder holder, int position) {
         Comment comment = mComments.get(position);
         holder.bind(comment);
-
-
     }
 
     @Override
@@ -59,5 +58,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentHolder> {
     public void addAll(List<Comment> list) {
         mComments.addAll(list);
         notifyDataSetChanged();
+    }
+
+    public void add(int index, Comment comment){
+        mComments.add(index,comment);
+        notifyItemInserted(index);
     }
 }

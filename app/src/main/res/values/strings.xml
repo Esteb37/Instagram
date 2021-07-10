@@ -31,4 +31,18 @@
     <string name="or">OR</string>
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="back">Back</string>
+    <string name="comments">Comments</string>
+    <string name="add_a_comment">Add a comment…</string>
+    <string name="edit">edit</string>
+    <string name="posts">Posts</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="grid">grid</string>
+    <string name="tags">tags</string>
+    <string name="menu">menu</string>
+    <string name="comment">comment</string>
+    <string name="share">share</string>
+    <string name="save">save</string>
+    <string name="liked_by">Liked by</string>
+    <string name="and">and</string>
 </resources>

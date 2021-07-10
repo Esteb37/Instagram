@@ -5,39 +5,40 @@ import android.util.Log;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 
 import java.util.Date;
 
 @ParseClassName("Comment")
 public class Comment extends ParseObject implements Parcelable {
 
+    public static final String TAG = "CommentClass";
+
     private static final String KEY_CONTENT = "content";
     private static final String KEY_USER = "user";
     private static final String KEY_POST = "post";
-
-    public void setContent(String content){
-        put(KEY_CONTENT,content);
-    }
 
     public String getContent(){
         return getString(KEY_CONTENT);
     }
 
-    public void setPost(Post post){
-        put(KEY_POST,post);
+    public void setContent(String content){
+        put(KEY_CONTENT,content);
     }
 
     public Post getPost(){
         return (Post) getParseObject(KEY_POST);
     }
 
-    public User getUser(){
-        return User.fromParseUser(getParseUser(KEY_USER));
+    public void setPost(Post post){
+        put(KEY_POST,post);
     }
 
     public void setUser(User user){
-        put(KEY_USER,(ParseUser) user);
+        put(KEY_USER,user);
+    }
+
+    public User getUser(){
+        return User.fromParseUser(getParseUser(KEY_USER));
     }
 
     public static String calculateTimeAgo(Date createdAt) {

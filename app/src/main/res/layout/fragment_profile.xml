@@ -14,7 +14,8 @@
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="@string/profile" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -48,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Posts"
+                android:text="@string/posts"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
 
@@ -72,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Followers"
+                android:text="@string/followers"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
 
@@ -96,7 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Following"
+                android:text="@string/following"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
     </LinearLayout>
@@ -141,7 +142,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#00FFFFFF"
-            app:srcCompat="@android:drawable/ic_dialog_dialer" />
+            app:srcCompat="@android:drawable/ic_dialog_dialer"
+            android:contentDescription="@string/grid" />
 
         <ImageButton
             android:id="@+id/imageButton7"
@@ -150,7 +152,8 @@
             android:layout_weight="1"
             android:background="#00FFFFFF"
             app:srcCompat="@drawable/instagram_user_outline_24"
-            app:tint="#FFFFFF" />
+            app:tint="#FFFFFF"
+            android:contentDescription="@string/tags" />
 
     </LinearLayout>
 

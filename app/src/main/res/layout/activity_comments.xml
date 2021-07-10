@@ -56,7 +56,7 @@
                 android:id="@+id/etComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Add a comment..."
+                android:hint="@string/add_a_comment"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#BCBCBC" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -71,13 +71,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            tools:srcCompat="@tools:sample/avatars"
+            android:contentDescription="@string/profile" />
 
         <Button
             android:id="@+id/btnPost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Post"
+            android:text="@string/post"
             android:textColor="#43A7F7"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/tilComment"

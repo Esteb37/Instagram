@@ -31,17 +31,15 @@ public class ProfileFragment extends Fragment {
     public static final String TAG = "ProfileFragment";
 
     private FragmentProfileBinding app;
-    private User mUser;
-    private int mPage = 0;
     private Context mContext;
 
-    List<Post> mPosts;
-    ImageAdapter mAdapter;
+    private User mUser;
+    private List<Post> mPosts;
+    private ImageAdapter mAdapter;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +50,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         app = FragmentProfileBinding.inflate(inflater, container, false);
+        assert getArguments() != null;
         mUser = getArguments().getParcelable("user");
         return app.getRoot();
     }
@@ -62,36 +61,18 @@ public class ProfileFragment extends Fragment {
 
         mContext = view.getContext();
 
-        /*ImageAdapter.OnClickListener clickListener = position -> {
-            Intent i = new Intent(mContext, DetailsActivity.class);
-            i.putExtra("post", Parcels.wrap(mPosts.get(position)));
-            startActivity(i);
-        };
-
-        ImageAdapter.OnScrollListener scrollListener = position -> {
-            if (position >= mPosts.size() - 1) {
-
-                queryPosts(++mPage);
-                Log.d(TAG,"Loading mPage:"+mPage);
-            }
-        };*/
-
         setupRecyclerView();
 
         loadProfileDetails();
 
-        queryPosts(0);
+        queryPosts();
     }
 
     private void setupRecyclerView(){
-
-
-
         mPosts = new ArrayList<>();
         mAdapter = new ImageAdapter(mContext, mPosts);
 
         GridLayoutManager manager = new GridLayoutManager(mContext,3);
-
 
         // set the mAdapter on the recycler view
         app.rvPosts.setAdapter(mAdapter);
@@ -100,7 +81,22 @@ public class ProfileFragment extends Fragment {
         app.rvPosts.setLayoutManager(manager);
     }
 
-    private void queryPosts(int mPage) {
+    private void loadProfileDetails(){
+        app.tvBio.setText(mUser.getBio());
+        app.tvName.setText(mUser.getName());
+        app.tvFollowers.setText(String.valueOf(mUser.getFollowers()));
+        app.tvFollowing.setText(String.valueOf(mUser.getFollowing()));
+
+        ParseFile profilePicture = mUser.getProfilePicture();
+        if(profilePicture != null){
+            Glide.with(mContext)
+                    .load(profilePicture.getUrl())
+                    .transform(new RoundedCorners(300))
+                    .into(app.ivProfilePicture);
+        }
+    }
+
+    private void queryPosts() {
 
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class).whereContains("user", mUser.getObjectId());
 
@@ -110,20 +106,4 @@ public class ProfileFragment extends Fragment {
         });
 
     }
-
-    private void loadProfileDetails(){
-        ParseFile profilePicture = mUser.getProfilePicture();
-        if(profilePicture != null){
-            Glide.with(mContext)
-                    .load(profilePicture.getUrl())
-                    .transform(new RoundedCorners(300))
-                    .into(app.ivProfilePicture);
-        }
-
-        app.tvBio.setText(mUser.getBio());
-        app.tvName.setText(mUser.getName());
-        app.tvFollowers.setText(String.valueOf(mUser.getFollowers()));
-        app.tvFollowing.setText(String.valueOf(mUser.getFollowing()));
-    }
-
 }

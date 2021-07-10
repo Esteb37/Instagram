@@ -58,7 +58,8 @@
         android:inputType="textMultiLine"
         android:textColor="#FFFFFF"
         android:textColorHint="#E3E0E0"
-        tools:ignore="LabelFor" />
+        tools:ignore="LabelFor"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/btnPicture"

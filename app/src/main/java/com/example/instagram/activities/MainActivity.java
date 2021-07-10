@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -24,22 +24,28 @@ import java.util.Objects;
 @SuppressWarnings("deprecation")
 public class MainActivity extends AppCompatActivity {
 
-    ActivityMainBinding app;
-    User mCurrentUser;
-    @SuppressLint("NonConstantResourceId")
+    public static final String TAG = "MainActivity";
+
+    private ActivityMainBinding app;
+    private Context mContext;
+
+    private User mCurrentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mContext = MainActivity.this;
+
         mCurrentUser = User.getCurrentUser();
+
         setupLayout();
 
-        setLogoutListener();
+        setupNavigationBar();
 
-        setupNavigation();
+        setLogoutButtonListener();
 
     }
-
 
     private void setupLayout(){
         app = ActivityMainBinding.inflate(getLayoutInflater());
@@ -52,29 +58,34 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.toolbar_main);
     }
 
-    private void setupNavigation(){
+    private void setupNavigationBar(){
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
+        final int actionHome = R.id.actionHome;
+        final int actionProfile = R.id.actionProfile;
+        final int actionPost = R.id.actionPost;
+
         app.bottomNavigation.setOnNavigationItemSelectedListener(item -> {
-            Fragment fragment = new Fragment();
-            resetIcons();
+            Fragment fragment;
             switch(item.getItemId()){
-                case R.id.actionHome:
+                case actionHome:
                     fragment = new HomeFragment();
-                    app.bottomNavigation.getMenu().findItem(R.id.actionHome).setIcon(R.drawable.instagram_home_filled_24);
+                    changeIcons(actionHome,R.drawable.instagram_home_filled_24);
                     break;
-                case R.id.actionPost:
+                case actionPost:
                     fragment = new PostFragment();
-                    app.bottomNavigation.getMenu().findItem(R.id.actionPost).setIcon(R.drawable.instagram_new_post_filled_24);
+                    changeIcons(actionPost,R.drawable.instagram_new_post_filled_24);
                     break;
-                case R.id.actionProfile:
+                case actionProfile:
                     fragment = new ProfileFragment();
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("user", mCurrentUser);
                     fragment.setArguments(bundle);
-                    app.bottomNavigation.getMenu().findItem(R.id.actionProfile).setIcon(R.drawable.instagram_user_filled_24);
+                    changeIcons(actionProfile,R.drawable.instagram_user_filled_24);
                     break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + item.getItemId());
             }
             fragmentManager.beginTransaction().replace(R.id.flContainer,fragment).commit();
             return true;
@@ -82,20 +93,19 @@ public class MainActivity extends AppCompatActivity {
         app.bottomNavigation.setSelectedItemId(R.id.actionHome);
     }
 
-    private void setLogoutListener(){
+    private void setLogoutButtonListener(){
         findViewById(R.id.btnLogout).setOnClickListener(v -> {
             ParseUser.logOut();
-            Intent i = new Intent(MainActivity.this,LoginActivity.class);
+            Intent i = new Intent(mContext,LoginActivity.class);
             startActivity(i);
         });
     }
 
-
-    private void resetIcons(){
+    private void changeIcons(int actionIcon, int drawable) {
+        app.bottomNavigation.getMenu().findItem(actionIcon).setIcon(drawable);
         app.bottomNavigation.getMenu().findItem(R.id.actionHome).setIcon(R.drawable.instagram_home_outline_24);
         app.bottomNavigation.getMenu().findItem(R.id.actionPost).setIcon(R.drawable.instagram_new_post_outline_24);
         app.bottomNavigation.getMenu().findItem(R.id.actionProfile).setIcon(R.drawable.instagram_user_outline_24);
     }
-
 
 }

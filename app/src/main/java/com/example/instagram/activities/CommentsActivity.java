@@ -4,10 +4,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -21,11 +19,9 @@ import com.example.instagram.databinding.ActivityCommentsBinding;
 import com.example.instagram.models.Comment;
 import com.example.instagram.models.Post;
 import com.example.instagram.models.User;
-import com.parse.GetCallback;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
@@ -37,19 +33,20 @@ public class CommentsActivity extends AppCompatActivity {
 
     public static final String TAG = "CommentsActivity";
 
-    User mCurrentUser;
-    Post mCurrentPost;
+    private ActivityCommentsBinding app;
+    private Context mContext;
 
-    List<Comment> mComments;
-    CommentsAdapter mAdapter;
+    private User mCurrentUser;
+    private Post mCurrentPost;
 
-    ActivityCommentsBinding app;
+    private CommentsAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comments);
 
+        mContext = CommentsActivity.this;
+        
         mCurrentUser = User.getCurrentUser();
 
         mCurrentPost = Parcels.unwrap(getIntent().getParcelableExtra("post"));
@@ -58,35 +55,53 @@ public class CommentsActivity extends AppCompatActivity {
 
         setupRecyclerView();
 
-        setPostListener();
+        setPostButtonListener();
 
         loadProfilePicture();
 
         loadComments();
     }
 
-    private void loadComments(){
+    private void setupLayout(){
+        setContentView(R.layout.activity_comments);
 
+        app = ActivityCommentsBinding.inflate(getLayoutInflater());
+        View view = app.getRoot();
+        setContentView(view);
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.toolbar_detail);
+        ((TextView) findViewById(R.id.tvTitle)).setText(R.string.comments);
+    }
+
+    private void setupRecyclerView(){
+        List<Comment> comments = new ArrayList<>();
+        mAdapter = new CommentsAdapter(mContext, comments);
+
+        app.rvComments.setLayoutManager(new LinearLayoutManager(mContext));
+        app.rvComments.setAdapter(mAdapter);
+    }
+
+    private void loadComments(){
         ParseQuery<Comment> query = ParseQuery.getQuery(Comment.class).whereContains("post",mCurrentPost.getObjectId());
 
         query.addDescendingOrder("createdAt");
 
-        query.findInBackground((comments, e) ->{
-            mAdapter.addAll(comments);
-        });
+        query.findInBackground((comments, e) -> mAdapter.addAll(comments));
     }
 
     private void loadProfilePicture(){
         ParseFile profilePicture = mCurrentUser.getProfilePicture();
         assert profilePicture != null;
-        Glide.with(CommentsActivity.this)
+        Glide.with(mContext)
                 .load(profilePicture.getUrl())
                 .transform(new RoundedCorners(100), new CenterCrop())
                 .into(app.ivProfilePicture);
     }
 
-    private void setPostListener(){
+    private void setPostButtonListener(){
         app.btnPost.setOnClickListener(v -> {
+            
             Comment comment = (Comment) ParseObject.create("Comment");
             comment.setContent(Objects.requireNonNull(app.etComment.getText()).toString());
             comment.setUser(mCurrentUser);
@@ -95,13 +110,8 @@ public class CommentsActivity extends AppCompatActivity {
             comment.saveInBackground(e -> {
                 if(e==null){
                     mCurrentPost.addComment(comment);
-
-                    mComments.add(0,comment);
-                    mAdapter.notifyItemInserted(0);
-                    app.etComment.setText("");
-                    app.etComment.clearFocus();
-                    InputMethodManager imm = (InputMethodManager) CommentsActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(app.tilComment.getWindowToken(), 0);
+                    mAdapter.add(0,comment);
+                    clearFocus();
                 } else {
                     e.printStackTrace();
                 }
@@ -109,22 +119,10 @@ public class CommentsActivity extends AppCompatActivity {
         });
     }
 
-    private void setupRecyclerView(){
-        mComments = new ArrayList<>();
-        mAdapter = new CommentsAdapter(CommentsActivity.this,mComments);
-
-        app.rvComments.setLayoutManager(new LinearLayoutManager(CommentsActivity.this));
-        app.rvComments.setAdapter(mAdapter);
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void setupLayout(){
-        app = ActivityCommentsBinding.inflate(getLayoutInflater());
-        View view = app.getRoot();
-        setContentView(view);
-
-        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.toolbar_detail);
-        ((TextView) findViewById(R.id.tvTitle)).setText("Comments");
+    private void clearFocus() {
+        app.etComment.setText("");
+        app.etComment.clearFocus();
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(app.tilComment.getWindowToken(), 0);
     }
 }

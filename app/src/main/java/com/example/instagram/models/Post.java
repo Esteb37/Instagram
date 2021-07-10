@@ -6,7 +6,6 @@ import android.util.Log;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,13 +15,14 @@ import java.util.Objects;
 @ParseClassName("Post")
 public class Post extends ParseObject implements Parcelable {
 
+    public static final String TAG = "PostClass";
+
     private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_USER_LIKES = "userLikes";
+    private static final String KEY_COMMENTS = "comments";
+    private static final String KEY_LIKES = "likes";
     private static final String KEY_IMAGE = "image";
     private static final String KEY_USER = "user";
-    private static final String KEY_LIKES = "likes";
-    private static final String KEY_COMMENTS = "comments";
-
-    public static final String TAG = "Post";
 
     public String getDescription(){
         return getString(KEY_DESCRIPTION);
@@ -45,11 +45,7 @@ public class Post extends ParseObject implements Parcelable {
     }
 
     public void setUser(User user){
-        put(KEY_USER,(ParseUser) user);
-    }
-
-    public ParseFile getProfilePicture(){
-        return getUser().getProfilePicture();
+        put(KEY_USER,user);
     }
 
     public int getLikes(){
@@ -59,6 +55,33 @@ public class Post extends ParseObject implements Parcelable {
     public void setLikes(int likes){
         put(KEY_LIKES,likes);
         update();
+    }
+
+    public List<User> getUserLikes(){
+        return getList(KEY_USER_LIKES);
+    }
+
+    public void setUserLikes(List<User> userLikes){
+        put(KEY_USER_LIKES,userLikes);
+        update();
+    }
+
+    public void addLike(User user){
+        List<User> userLikes = getUserLikes();
+        if(userLikes==null){
+            userLikes = new ArrayList<>();
+        }
+        userLikes.add(user);
+        setUserLikes(userLikes);
+        setLikes(getLikes()+1);
+    }
+
+    public void removeLike(User user){
+        List<User> userLikes = getUserLikes();
+        assert userLikes != null;
+        userLikes.remove(user);
+        setUserLikes(userLikes);
+        setLikes(getLikes()-1);
     }
 
     public List<Comment> getComments(){
@@ -79,28 +102,6 @@ public class Post extends ParseObject implements Parcelable {
         setComments(comments);
     }
 
-    public User getUserLike() {
-        return User.fromParseUser((ParseUser) Objects.requireNonNull(getList("userLikes")).get(0));
-    }
-
-    public void addLike(User user){
-        List<User> userLikes = getList("userLikes");
-        if(userLikes==null){
-            userLikes = new ArrayList<>();
-        }
-        userLikes.add(user);
-        put("userLikes",userLikes);
-        setLikes(getLikes()+1);
-    }
-
-    public void removeLike(User user){
-        List<User> userLikes = getList("userLikes");
-        assert userLikes != null;
-        userLikes.remove(user);
-        put("userLikes",userLikes);
-        setLikes(getLikes()-1);
-    }
-
     public void update(){
         this.saveInBackground(e -> {
             if(e == null){
@@ -113,7 +114,6 @@ public class Post extends ParseObject implements Parcelable {
 
     public boolean isLikedByUser(User user){
         List<String> likes = user.getLikes();
-
         return Objects.requireNonNull(likes).contains(getObjectId());
     }
 

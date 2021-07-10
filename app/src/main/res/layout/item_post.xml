@@ -44,7 +44,8 @@
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="@string/profile" />
 
     <ImageView
         android:id="@+id/ivProfilePicture2"
@@ -53,7 +54,8 @@
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="@+id/tvUsername2"
         app:layout_constraintTop_toBottomOf="@+id/tvUsername2"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="@string/profile" />
 
     <ImageButton
         android:id="@+id/imageButton"
@@ -66,7 +68,8 @@
         app:layout_constraintTop_toTopOf="@+id/ivProfilePicture"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/media_option_button"
-        app:tint="#FFFFFF" />
+        app:tint="#FFFFFF"
+        android:contentDescription="@string/menu" />
 
     <ImageButton
         android:id="@+id/btnLike"
@@ -78,7 +81,8 @@
         app:layout_constraintStart_toStartOf="@+id/ivProfilePicture"
         app:layout_constraintTop_toBottomOf="@+id/ivContent"
         app:srcCompat="@drawable/ufi_heart"
-        app:tint="#FFFFFF" />
+        app:tint="#FFFFFF"
+        android:contentDescription="@string/like" />
 
     <ImageButton
         android:id="@+id/btnComment"
@@ -93,7 +97,8 @@
         app:layout_constraintTop_toTopOf="@+id/btnLike"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ufi_comment"
-        app:tint="#FFFFFF" />
+        app:tint="#FFFFFF"
+        android:contentDescription="@string/comment" />
 
     <ImageButton
         android:id="@+id/imageButton4"
@@ -107,7 +112,8 @@
         app:layout_constraintTop_toTopOf="@+id/btnComment"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ufi_new_direct"
-        app:tint="#FFFFFF" />
+        app:tint="#FFFFFF"
+        android:contentDescription="@string/share" />
 
     <ImageButton
         android:id="@+id/imageButton5"
@@ -120,7 +126,8 @@
         app:layout_constraintEnd_toEndOf="@+id/tvDescription"
         app:layout_constraintTop_toTopOf="@+id/imageButton4"
         app:srcCompat="@drawable/ufi_save_icon"
-        app:tint="#FFFFFF" />
+        app:tint="#FFFFFF"
+        android:contentDescription="@string/save" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clLikedBy"
@@ -136,7 +143,7 @@
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Liked by"
+            android:text="@string/liked_by"
             android:textColor="#FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -175,7 +182,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="and"
+                android:text="@string/and"
                 android:textColor="#FFFFFF"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -229,7 +236,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:gravity="center_vertical"
-        android:text="Add a comment..."
+        android:text="@string/add_a_comment"
         android:textColor="#B6B6B6"
         app:layout_constraintBottom_toBottomOf="@+id/ivProfilePicture2"
         app:layout_constraintStart_toEndOf="@+id/ivProfilePicture2"

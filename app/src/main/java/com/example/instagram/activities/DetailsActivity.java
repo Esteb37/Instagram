@@ -3,7 +3,7 @@ package com.example.instagram.activities;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,99 +16,58 @@ import com.example.instagram.R;
 import com.example.instagram.databinding.ItemPostBinding;
 import com.example.instagram.models.Post;
 import com.example.instagram.models.User;
-import com.parse.ParseException;
+
 import com.parse.ParseFile;
-import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    ItemPostBinding app;
-    Post mPost;
-    User mCurrentUser;
     public static final String TAG = "DetailsActivity";
 
-    @SuppressLint("SetTextI18n")
+    private ItemPostBinding app;
+    private Context mContext;
+
+    private Post mPost;
+    private User mCurrentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.item_post);
 
-        setupLayout();
+        mContext = DetailsActivity.this;
 
         mPost = Parcels.unwrap(getIntent().getParcelableExtra("post"));
 
         mCurrentUser = User.getCurrentUser();
 
-        loadDetails();
+        setupLayout();
+
+        loadPostDetails();
 
         loadUserDetails();
 
-        setLikeListener();
+        setLikeButtonListener();
 
-        setCommentListener();
-
+        setCommentButtonListener();
     }
 
-    @SuppressLint("DefaultLocale")
-    private void showLikes(Post post) throws ParseException {
-        if(post.getLikes()>0){
-            app.tvUserLike.setText(post.getUserLike().fetchIfNeeded().getUsername());
-            app.clLikedBy.setVisibility(View.VISIBLE);
-            if(post.getLikes()>1){
-                app.tvLikes.setText(String.format("%d others.", post.getLikes() - 1));
-                app.clLikedOthers.setVisibility(View.VISIBLE);
-            } else {
-                app.clLikedOthers.setVisibility(View.GONE);
-            }
-        }
-        else{
-            app.clLikedBy.setVisibility(View.GONE);
-        }
-    }
-
-
-    @SuppressLint("SetTextI18n")
     private void setupLayout(){
+        setContentView(R.layout.item_post);
+
         app = ItemPostBinding.inflate(getLayoutInflater());
         View view = app.getRoot();
         setContentView(view);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.toolbar_detail);
-        ((TextView) findViewById(R.id.tvTitle)).setText("Post");
+        ((TextView) findViewById(R.id.tvTitle)).setText(R.string.post);
     }
 
-    private void setLikeListener(){
-        app.btnLike.setOnClickListener(v -> {
-            if(mPost.isLikedByUser(mCurrentUser)) {
-                app.btnLike.setImageResource(R.drawable.ufi_heart);
-                mCurrentUser.unlikePost(mPost);
-            } else {
-                app.btnLike.setImageResource(R.drawable.ufi_heart_active);
-                mCurrentUser.likePost(mPost);
-            }
-            try {
-                showLikes(mPost);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-        });
-    }
-
-    private void setCommentListener(){
-        app.btnComment.setOnClickListener(v -> {
-            Intent i = new Intent(DetailsActivity.this, CommentsActivity.class);
-            i.putExtra("post",Parcels.wrap(mPost));
-            startActivity(i);
-        });
-    }
-
-    private void loadDetails(){
+    private void loadPostDetails(){
         app.tvDescription.setText(mPost.getDescription());
         app.tvUsername.setText(mPost.getUser().getUsername());
         app.tvUsername2.setText(mPost.getUser().getUsername());
@@ -116,22 +75,18 @@ public class DetailsActivity extends AppCompatActivity {
 
         app.btnLike.setImageResource(mPost.isLikedByUser(mCurrentUser) ? R.drawable.ufi_heart_active: R.drawable.ufi_heart);
 
-        try {
-            showLikes(mPost);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        showLikes(mPost);
 
         ParseFile image = mPost.getImage();
         if(image != null){
-            Glide.with(DetailsActivity.this)
+            Glide.with(mContext)
                     .load(image.getUrl())
                     .into(app.ivContent);
         }
 
-        ParseFile profilePicture = mPost.getProfilePicture();
+        ParseFile profilePicture = mPost.getUser().getProfilePicture();
         if(profilePicture != null) {
-            Glide.with(DetailsActivity.this)
+            Glide.with(mContext)
                     .load(profilePicture.getUrl())
                     .transform(new RoundedCorners(100), new CenterCrop())
                     .into(app.ivProfilePicture);
@@ -141,10 +96,46 @@ public class DetailsActivity extends AppCompatActivity {
     private void loadUserDetails() {
         ParseFile currentProfile = mCurrentUser.getProfilePicture();
         if(currentProfile != null){
-            Glide.with(DetailsActivity.this)
+            Glide.with(mContext)
                     .load(currentProfile.getUrl())
                     .transform(new RoundedCorners(100),new CenterCrop())
                     .into(app.ivProfilePicture2);
+        }
+    }
+
+    private void setLikeButtonListener(){
+        app.btnLike.setOnClickListener(v -> {
+            if(mPost.isLikedByUser(mCurrentUser)) {
+                app.btnLike.setImageResource(R.drawable.ufi_heart);
+                mCurrentUser.unlikePost(mPost);
+            } else {
+                app.btnLike.setImageResource(R.drawable.ufi_heart_active);
+                mCurrentUser.likePost(mPost);
+            }
+            showLikes(mPost);
+        });
+    }
+
+    private void setCommentButtonListener(){
+        app.btnComment.setOnClickListener(v -> {
+            Intent i = new Intent(mContext, CommentsActivity.class);
+            i.putExtra("post",Parcels.wrap(mPost));
+            startActivity(i);
+        });
+    }
+
+    private void showLikes(Post post){
+        if(post.getLikes()>0){
+            app.tvUserLike.setText(post.getUserLikes().get(0).getUsername());
+            app.clLikedBy.setVisibility(View.VISIBLE);
+            if(post.getLikes()>1){
+                app.tvLikes.setText(String.format(Locale.US,"%d others.", post.getLikes() - 1));
+                app.clLikedOthers.setVisibility(View.VISIBLE);
+            } else {
+                app.clLikedOthers.setVisibility(View.GONE);
+            }
+        } else{
+            app.clLikedBy.setVisibility(View.GONE);
         }
     }
 }

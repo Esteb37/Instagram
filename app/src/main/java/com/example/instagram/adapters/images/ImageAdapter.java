@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.databinding.ItemImageBinding;
 import com.example.instagram.models.Post;
-import com.parse.ParseException;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,9 +17,11 @@ import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageHolder> {
 
+    public static final String TAG = "ImageAdapter";
+
     private final Context mContext;
+
     private final List<Post> mPosts;
-    ItemImageBinding app;
 
     public ImageAdapter(Context context, List<Post> posts) {
         mPosts = posts;
@@ -30,10 +31,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageHolder> {
     @NonNull
     @Override
     public ImageHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        app = ItemImageBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false);
+        com.example.instagram.databinding.ItemImageBinding app = ItemImageBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         View view = app.getRoot();
-
-        return new ImageHolder(view,mContext,app);
+        return new ImageHolder(view,mContext, app);
     }
 
     @Override

@@ -10,33 +10,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.databinding.ItemPostBinding;
 import com.example.instagram.models.Post;
-import com.parse.ParseException;
 
 import java.util.List;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostHolder> {
 
     private final Context mContext;
+
     private final List<Post> mPosts;
-    ItemPostBinding app;
+    private final OnScrollListener mScrollListener;
+    private final OnClickListener mClickListener;
 
-
-    //Listener for recyclerview item click
     public interface OnClickListener {
 
         //Return clicked position
         void onItemClicked(int position);
     }
 
-    OnClickListener mClickListener;
-
     public interface OnScrollListener {
 
         //Return clicked position
         void onScroll(int position);
     }
-
-    OnScrollListener mScrollListener;
 
     public PostsAdapter(Context context, List<Post> posts, OnClickListener clickListener, OnScrollListener scrollListener) {
         mContext = context;
@@ -48,21 +43,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostHolder> {
     @NonNull
     @Override
     public PostHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        app = ItemPostBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false);
+        com.example.instagram.databinding.ItemPostBinding app = ItemPostBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         View view = app.getRoot();
-
-        return new PostHolder(view,mContext,app,mClickListener);
+        return new PostHolder(view,mContext, app,mClickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PostHolder holder, int position) {
         Post post = mPosts.get(position);
-        try {
-            holder.bind(post);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        holder.bind(post);
         if (mScrollListener != null)  mScrollListener.onScroll(position);
     }
 
@@ -82,6 +71,5 @@ public class PostsAdapter extends RecyclerView.Adapter<PostHolder> {
         mPosts.addAll(list);
         notifyDataSetChanged();
     }
-
 
 }

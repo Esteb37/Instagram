@@ -16,7 +16,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/nux_dayone_landing_logo" />
+        app:srcCompat="@drawable/nux_dayone_landing_logo"
+        android:contentDescription="@string/logo" />
 
     <ImageButton
         android:id="@+id/btnLogout"
@@ -29,5 +30,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageView"
         app:srcCompat="@android:drawable/ic_lock_power_off"
-        app:tint="#FFFFFF" />
+        app:tint="#FFFFFF"
+        android:contentDescription="@string/logout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

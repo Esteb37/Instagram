@@ -29,25 +29,25 @@ import com.example.instagram.databinding.FragmentPostBinding;
 import com.example.instagram.models.Post;
 import com.example.instagram.models.User;
 import com.parse.ParseFile;
-import com.parse.ParseUser;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.List;
 
 
 public class PostFragment extends Fragment {
 
-    FragmentPostBinding app;
+
 
     public static final String TAG = "PostFragment";
-    public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 37;
     public static final String FILE_NAME = "photo.jpg";
+    public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 37;
+
+    private FragmentPostBinding app;
 
     private File mPhotoFile;
-    Context mContext;
-    User mCurrentUser;
+    private Context mContext;
+    private User mCurrentUser;
 
     public PostFragment() {
         // Required empty public constructor
@@ -74,71 +74,9 @@ public class PostFragment extends Fragment {
 
         mCurrentUser = User.getCurrentUser();
 
-        setSubmitListener();
-
         app.btnPicture.setOnClickListener(v-> launchCamera());
-    }
 
-    private void setSubmitListener(){
-        app.btnSubmit.setOnClickListener(v -> {
-            String description = app.etDescription.getText().toString();
-            if(description.isEmpty()){
-                Toast.makeText(mContext,"Description can't be empty", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            savePost(description,mPhotoFile);
-        });
-    }
-    private void savePost(String description, File mPhotoFile) {
-        Post post = new Post();
-        post.setDescription(description);
-        post.setUser(mCurrentUser);
-        app.pbLoading.setVisibility(View.VISIBLE);
-        if(mPhotoFile==null || app.ivPost.getDrawable() == null){
-            Toast.makeText(mContext, "There is no image!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        post.setImage(new ParseFile(mPhotoFile));
-
-        post.saveInBackground(e -> {
-            if(e != null){
-                Log.d(TAG,"Error while saving",e);
-                Toast.makeText(mContext,"Unable to save post",Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            Toast.makeText(mContext, "Post saved successfully.", Toast.LENGTH_SHORT).show();
-
-            mCurrentUser.addPost(post);
-
-            app.pbLoading.setVisibility(View.GONE);
-
-            final FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-
-            fragmentManager.beginTransaction().replace(R.id.flContainer,new HomeFragment()).commit();
-        });
-    }
-
-    @SuppressLint("QueryPermissionsNeeded")
-    public void launchCamera() {
-        // create Intent to take a picture and return control to the calling application
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Create a File reference for future access
-        mPhotoFile = getPhotoFileUri(FILE_NAME);
-
-        // wrap File object into a content provider
-        // required for API >= 24
-        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
-        Uri fileProvider = FileProvider.getUriForFile(mContext, "com.codepath.fileprovider", mPhotoFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
-        // Start the image capture intent to take photo
-        if (intent.resolveActivity(mContext.getPackageManager()) != null)
-            //noinspection deprecation
-            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        setSubmitListener();
 
     }
 
@@ -162,8 +100,71 @@ public class PostFragment extends Fragment {
         }
     }
 
+    private void setSubmitListener(){
+        app.btnSubmit.setOnClickListener(v -> {
+            String description = app.etDescription.getText().toString();
+            if(description.isEmpty()){
+                Toast.makeText(mContext,"Description can't be empty", Toast.LENGTH_SHORT).show();
+            } else{
+                savePost(description,mPhotoFile);
+            }
+        });
+    }
+
+    private void savePost(String description, File mPhotoFile) {
+        Post post = new Post();
+        post.setDescription(description);
+        post.setUser(mCurrentUser);
+        app.pbLoading.setVisibility(View.VISIBLE);
+
+        if(mPhotoFile==null || app.ivPost.getDrawable() == null){
+            Toast.makeText(mContext, "There is no image!", Toast.LENGTH_SHORT).show();
+        } else {
+            post.setImage(new ParseFile(mPhotoFile));
+
+            post.saveInBackground(e -> {
+                if (e != null) {
+                    Log.d(TAG, "Error while saving", e);
+                    Toast.makeText(mContext, "Unable to save post", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "Post saved successfully.", Toast.LENGTH_SHORT).show();
+
+                    mCurrentUser.addPost(post);
+
+                    app.pbLoading.setVisibility(View.GONE);
+
+                    final FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+
+                    fragmentManager.beginTransaction().replace(R.id.flContainer, new HomeFragment()).commit();
+                }
+            });
+        }
+    }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private void launchCamera() {
+        // create Intent to take a picture and return control to the calling application
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Create a File reference for future access
+        mPhotoFile = getPhotoFileUri();
+
+        // wrap File object into a content provider
+        // required for API >= 24
+        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
+        Uri fileProvider = FileProvider.getUriForFile(mContext, "com.codepath.fileprovider", mPhotoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
+        // So as long as the result is not null, it's safe to use the intent.
+        // Start the image capture intent to take photo
+        if (intent.resolveActivity(mContext.getPackageManager()) != null)
+            //noinspection deprecation
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
+    }
+
     // Returns the File for a photo stored on disk given the fileName
-    public File getPhotoFileUri (String fileName){
+    private File getPhotoFileUri(){
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
         // This way, we don't need to request external read/write runtime permissions.
@@ -176,8 +177,6 @@ public class PostFragment extends Fragment {
 
         // Return the file target for the photo based on filename
 
-        return new File(mediaStorageDir.getPath() + File.separator + fileName);
+        return new File(mediaStorageDir.getPath() + File.separator + PostFragment.FILE_NAME);
     }
-
-
 }
