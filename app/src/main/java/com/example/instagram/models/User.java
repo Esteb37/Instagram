@@ -1,5 +1,6 @@
 package com.example.instagram.models;
 
+import android.graphics.Bitmap;
 import android.os.Parcelable;
 import android.util.Log;
 

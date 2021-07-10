@@ -29,11 +29,11 @@ The following **stretch** features are implemented:
   - [x] Profile Tab (to view only the current user's posts, in a grid)
 - [x] Show the username and creation time for each post
 - User Profiles:
-  - [ ] Allow the logged in user to add a profile photo
+  - [x] Allow the logged in user to add a profile photo
   - [x] Display the profile photo with each post
   - [x] Tapping on a post's username or profile photo goes to that user's profile page
   - [x] User Profile shows posts in a grid
-- [ ] After the user submits a new post, show an indeterminate progress bar while the post is being uploaded to Parse
+- [x] After the user submits a new post, show an indeterminate progress bar while the post is being uploaded to Parse
 - [x] User can comment on a post and see all comments for each post in the post details screen.
 - [x] User can like a post and see number of likes for each post in the post details screen.
 
@@ -51,7 +51,7 @@ Please list two areas of the assignment you'd like to **discuss further with you
 1. More efficient ways to query lists of pointers
 2. Custom user objects 
 3. Making a more dynamic use of the camera and adding filters/transformations
-4. 
+
 
 ## Video Walkthrough
 
