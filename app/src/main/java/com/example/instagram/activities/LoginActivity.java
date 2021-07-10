@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.example.instagram.R;
@@ -21,11 +22,17 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
         if(ParseUser.getCurrentUser()!=null){
             goMainActivity();
         }
+
+        //Remove title bar
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
+
+        setContentView(R.layout.activity_login);
+
 
         app = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = app.getRoot();
