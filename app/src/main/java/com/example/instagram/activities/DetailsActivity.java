@@ -114,6 +114,8 @@ public class DetailsActivity extends AppCompatActivity {
         app.tvUsername2.setText(mPost.getUser().getUsername());
         app.tvTimestamp.setText(Post.calculateTimeAgo(mPost.getCreatedAt()));
 
+        app.btnLike.setImageResource(mPost.isLikedByUser(mCurrentUser) ? R.drawable.ufi_heart_active: R.drawable.ufi_heart);
+
         try {
             showLikes(mPost);
         } catch (ParseException e) {

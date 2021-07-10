@@ -29,24 +29,25 @@ public class User extends ParseUser implements Parcelable {
         return fromParseUser(ParseUser.getCurrentUser());
     }
 
-    public List<Post> getLikes() {
+    public List<String> getLikes() {
         return getList(KEY_LIKES);
     }
 
-    public void setLikes(List<Post> likes){
+    public void setLikes(List<String> likes){
         put(KEY_LIKES,likes);
         update();
     }
 
     public void addLike(Post post){
-        List<Post> likes = getLikes();
-        likes.add(post);
+        List<String> likes = getLikes();
+
+        likes.add(post.getObjectId());
         setLikes(likes);
     }
 
     public void removeLike(Post post){
-        List<Post> likes = getLikes();
-        likes.remove(post);
+        List<String> likes = getLikes();
+        likes.remove(post.getObjectId());
         setLikes(likes);
     }
 

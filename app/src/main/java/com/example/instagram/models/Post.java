@@ -112,7 +112,9 @@ public class Post extends ParseObject implements Parcelable {
     }
 
     public boolean isLikedByUser(User user){
-        return Objects.requireNonNull(user.getLikes()).contains(this);
+        List<String> likes = user.getLikes();
+
+        return Objects.requireNonNull(likes).contains(getObjectId());
     }
 
     public static String calculateTimeAgo(Date createdAt) {

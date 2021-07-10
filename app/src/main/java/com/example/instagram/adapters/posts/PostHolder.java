@@ -134,12 +134,13 @@ class PostHolder extends RecyclerView.ViewHolder {
     private void loadPostDetails(){
 
         app.tvDescription.setText(mPost.getDescription());
-        Log.d(TAG,mPost.getObjectId());
         app.tvUsername.setText(mPost.getUser().getUsername());
         app.tvUsername2.setText(mPost.getUser().getUsername());
         app.tvTimestamp.setText(Post.calculateTimeAgo(mPost.getCreatedAt()));
 
         showLikes(mPost);
+
+        app.btnLike.setImageResource(mPost.isLikedByUser(mCurrentUser) ? R.drawable.ufi_heart_active: R.drawable.ufi_heart);
 
         ParseFile image = mPost.getImage();
         if(image != null){
