@@ -29,7 +29,7 @@ The following **stretch** features are implemented:
   - [x] Profile Tab (to view only the current user's posts, in a grid)
 - [x] Show the username and creation time for each post
 - User Profiles:
-  - [x] Allow the logged in user to add a profile photo
+  - [ ] Allow the logged in user to add a profile photo
   - [x] Display the profile photo with each post
   - [x] Tapping on a post's username or profile photo goes to that user's profile page
   - [x] User Profile shows posts in a grid
@@ -39,18 +39,25 @@ The following **stretch** features are implemented:
 
 The following **additional** features are implemented:
 
-- [ ] List anything else that you can get done to improve the app functionality!
+- [x] Like count is more like Instagram by displaying "Liked by user and x others"
+- [x] Comment view has Instagram's design and behavior
+- [x] A custom User class is implemented to ease user-related actions
+- [x] Signup, details and profile screens have Instagram's design
+- [x] The profile view shows the user's name, bio, follower count, following count, 
+        post count and post grid
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1.
-2.
+1. More efficient ways to query lists of pointers
+2. Custom user objects 
+3. Making a more dynamic use of the camera and adding filters/transformations
+4. 
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/Esteb37/Instagram/blob/master/walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [Kap](https://getkap.co/).
 
@@ -63,7 +70,6 @@ List any 3rd party libraries, icons, graphics, or other assets you used in your 
 
 ## Notes
 
-Describe any challenges encountered while building the app.
 
 ## License
 
