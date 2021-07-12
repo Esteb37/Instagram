@@ -27,30 +27,44 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/*
+    Fragment for displaying
+ */
 public class HomeFragment extends Fragment {
 
     public static final String TAG = "HomeFragment";
 
+    //View binder
     private FragmentHomeBinding app;
 
+    //Current context
     private Context mContext;
 
+    //Adapter for the timeline recyclerview
     private PostsAdapter mAdapter;
+
+    //List of posts fromt the timeline
     private List<Post> mPosts;
 
+    //Current page the user is at in the timeline
     private int mPage = 0;
 
+    // Required empty public constructor
+    public HomeFragment() { }
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+    /*
+       Loads the last saved instance of the fragment
 
+       @param savedInstanceState - The last saved instance
+    */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /*
+        Inflates the fragment with the layout
+     */
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,6 +72,9 @@ public class HomeFragment extends Fragment {
         return app.getRoot();
     }
 
+    /*
+        Sets up the fragment's methods.
+     */
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -73,56 +90,78 @@ public class HomeFragment extends Fragment {
 
     }
 
+    /*
+        Sets up the post timeline recyclerview
+     */
     private void setupRecyclerView(){
 
+        //Create a listener for a click on the post
         PostsAdapter.OnClickListener clickListener = position -> {
+
+            //Open the post in the details activity
             Intent i = new Intent(mContext, DetailsActivity.class);
             i.putExtra("post", Parcels.wrap(mPosts.get(position)));
             startActivity(i);
         };
 
+        //Create a listener for scrolling
         PostsAdapter.OnScrollListener scrollListener = position -> {
+
+            //If the user has arriveda t the end, load more posts
             if (position >= mPosts.size() - 1) {
                 queryPosts(++mPage);
                 Log.d(TAG,"Loading mPage:"+mPage);
             }
         };
 
+        //Setup the posts list
         mPosts = new ArrayList<>();
+
+        //Create the adapter
         mAdapter = new PostsAdapter(mContext, mPosts, clickListener, scrollListener);
 
-        // set the mAdapter on the recycler view
+        //Set the adapter on the recycler view
         app.rvPosts.setAdapter(mAdapter);
 
-        // set the layout manager on the recycler view
+        //Set the layout manager on the recycler view
         app.rvPosts.setLayoutManager(new LinearLayoutManager(mContext));
     }
 
+    /*
+        Sets up a listener for the "swipe down to refresh" action
+     */
     private void setupRefreshListener(){
         app.swipeContainer.setOnRefreshListener(() -> {
+
+            //Refresh the timeline
             mPage = 0;
             queryPosts(mPage);
         });
     }
 
+    //Get the timeline's posts
     private void queryPosts(int mPage) {
 
-        // specify what type of data we want to query - Post.class
+        //Specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        // include data referred by user key
-        query.include("user");
-        // limit query to latest 10 items
 
+        //Include data referred by user key
+        query.include("user");
+
+        //Limit query to latest 10 items
         final int limit = 10;
         query.setLimit(limit);
 
+        //Get the selected page fromt the timeline
         query.setSkip(limit*mPage);
 
-        // order posts by creation date (newest first)
+        //Order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
-        // start an asynchronous call for posts
+
+        //Start an asynchronous call for posts
         query.findInBackground((posts, e) -> {
-            // check for errors
+
+            //Check for errors
             if (e==null) {
                 if (mPage == 0) {
                     mAdapter.clear();
@@ -133,7 +172,6 @@ public class HomeFragment extends Fragment {
                 Log.e(TAG, "Issue with getting posts", e);
             }
             app.swipeContainer.setRefreshing(false);
-
         });
     }
 

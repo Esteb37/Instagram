@@ -34,30 +34,44 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-
+/*
+    Fragment to create a new post
+ */
 public class PostFragment extends Fragment {
 
-
-
     public static final String TAG = "PostFragment";
+
     public static final String FILE_NAME = "photo.jpg";
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 37;
 
+    //Viewbinder
     private FragmentPostBinding app;
 
-    private File mPhotoFile;
+    //Current context
     private Context mContext;
+
+    //Taken photo file
+    private File mPhotoFile;
+
+    //Current user
     private User mCurrentUser;
 
-    public PostFragment() {
-        // Required empty public constructor
-    }
+    // Required empty public constructor
+    public PostFragment() {}
 
+    /*
+        Loads the last saved instance of the fragment
+
+        @param savedInstanceState - The last saved instance
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /*
+        Inflates the fragment with the layout
+     */
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,6 +79,9 @@ public class PostFragment extends Fragment {
         return app.getRoot();
     }
 
+    /*
+        Sets up the fragment's methods.
+     */
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
 
@@ -74,54 +91,54 @@ public class PostFragment extends Fragment {
 
         mCurrentUser = User.getCurrentUser();
 
+        //Launch camera when the "Take Picture" button is clicked
         app.btnPicture.setOnClickListener(v-> launchCamera());
 
         setSubmitListener();
 
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                // by this point we have the camera photo on disk
-                Bitmap takenImage = BitmapFactory.decodeFile(mPhotoFile.getAbsolutePath());
-                // RESIZE BITMAP, see section below
-                // Load the taken image into a preview
-                app.ivPost.setImageBitmap(takenImage);
-                app.ivPost.setVisibility(View.VISIBLE);
-            } else { // Result was a failure
-                Toast.makeText(mContext, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    }
-
+    /*
+        Sets a listener for the "Submit" button
+     */
     private void setSubmitListener(){
         app.btnSubmit.setOnClickListener(v -> {
+
+            //Get the description
             String description = app.etDescription.getText().toString();
+
+            //Save the post
             if(description.isEmpty()){
                 Toast.makeText(mContext,"Description can't be empty", Toast.LENGTH_SHORT).show();
             } else{
-                savePost(description,mPhotoFile);
+                savePost(description);
             }
         });
     }
 
-    private void savePost(String description, File mPhotoFile) {
+    /*
+        Saves a post into the database and the user's list of posts
+
+        @param description - The posts description
+     */
+    private void savePost(String description) {
+
+        //Create a new post with the selected details and the current user
         Post post = new Post();
         post.setDescription(description);
         post.setUser(mCurrentUser);
+
+        //Display the progress bar
         app.pbLoading.setVisibility(View.VISIBLE);
 
         if(mPhotoFile==null || app.ivPost.getDrawable() == null){
             Toast.makeText(mContext, "There is no image!", Toast.LENGTH_SHORT).show();
         } else {
+
+            //Set the image into the created post object
             post.setImage(new ParseFile(mPhotoFile));
 
+            //Save the post in the database
             post.saveInBackground(e -> {
                 if (e != null) {
                     Log.d(TAG, "Error while saving", e);
@@ -129,28 +146,32 @@ public class PostFragment extends Fragment {
                 } else {
                     Toast.makeText(mContext, "Post saved successfully.", Toast.LENGTH_SHORT).show();
 
+                    //Add the post to the user's list of posts
                     mCurrentUser.addPost(post);
 
+                    //Hide the progressbar
                     app.pbLoading.setVisibility(View.GONE);
 
+                    //Return to the home fragment
                     final FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-
                     fragmentManager.beginTransaction().replace(R.id.flContainer, new HomeFragment()).commit();
                 }
             });
         }
     }
 
+    /*
+        Launches the camera for taking a picture.
+     */
     @SuppressLint("QueryPermissionsNeeded")
     private void launchCamera() {
-        // create Intent to take a picture and return control to the calling application
+        // Create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
         // Create a File reference for future access
         mPhotoFile = getPhotoFileUri();
 
-        // wrap File object into a content provider
-        // required for API >= 24
-        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
+        // Wrap File object into a content provider
         Uri fileProvider = FileProvider.getUriForFile(mContext, "com.codepath.fileprovider", mPhotoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
@@ -160,14 +181,38 @@ public class PostFragment extends Fragment {
         if (intent.resolveActivity(mContext.getPackageManager()) != null)
             //noinspection deprecation
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-
     }
 
-    // Returns the File for a photo stored on disk given the fileName
+    /*
+        Catches the result image from the camera activity
+     */
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                // Retrieve the photo taken by the canmera
+                Bitmap takenImage = BitmapFactory.decodeFile(mPhotoFile.getAbsolutePath());
+
+                // Load the taken image into a preview
+                app.ivPost.setImageBitmap(takenImage);
+                app.ivPost.setVisibility(View.VISIBLE);
+
+            } else { // Result was a failure
+                Toast.makeText(mContext, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
+    /*
+        Returns the File for a photo stored on disk given the fileName
+     */
     private File getPhotoFileUri(){
         // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
         File mediaStorageDir = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         // Create the storage directory if it does not exist
@@ -176,7 +221,6 @@ public class PostFragment extends Fragment {
         }
 
         // Return the file target for the photo based on filename
-
         return new File(mediaStorageDir.getPath() + File.separator + PostFragment.FILE_NAME);
     }
 }
