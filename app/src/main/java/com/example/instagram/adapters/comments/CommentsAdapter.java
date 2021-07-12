@@ -15,6 +15,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/*
+    Adapter class for the comments recyclerview
+ */
 public class CommentsAdapter extends RecyclerView.Adapter<CommentHolder> {
 
     public static final String TAG = "CommentsAdapter";
@@ -23,6 +26,15 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentHolder> {
 
     private final List<Comment> mComments;
 
+    /*
+        Constructor from a context and a list of comments
+
+        @param Context context - The context in which the recyclerview is being
+                                    displayed
+        @param List<Comment> comments - The list of comments to display
+
+        @return none
+     */
     public CommentsAdapter(Context context, List<Comment> comments) {
         mContext = context;
         mComments = comments;
@@ -48,18 +60,39 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentHolder> {
         return mComments.size();
     }
 
-    // Clean all elements of the recycler
+    /*
+        Cleans the elements of the recyclerview
+
+        @param none
+
+        @return void
+     */
     public void clear() {
         mComments.clear();
         notifyDataSetChanged();
     }
 
-    // Add a list of items -- change to type used
+    /*
+        Adds a list of comment items to the recyclerview and notifies the adapter
+
+        @param List<Comment> list - THe list of comments to add
+
+        @return void
+     */
     public void addAll(List<Comment> list) {
         mComments.addAll(list);
         notifyDataSetChanged();
     }
 
+    /*
+        Adds a single comment to the recyclerview and notifies the adapter
+
+        @param int index - The position in which the comment is inserted
+        @param Comment comment - The comment to insert
+
+        @return void
+
+     */
     public void add(int index, Comment comment){
         mComments.add(index,comment);
         notifyItemInserted(index);

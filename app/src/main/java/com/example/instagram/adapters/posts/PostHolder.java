@@ -19,6 +19,7 @@ import com.example.instagram.databinding.ItemPostBinding;
 import com.example.instagram.fragments.ProfileFragment;
 import com.example.instagram.models.Post;
 import com.example.instagram.models.User;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 
 import org.parceler.Parcels;
@@ -43,7 +44,7 @@ class PostHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(v -> clickListener.onItemClicked(getAdapterPosition()));
     }
 
-    public void bind(Post post){
+    public void bind(Post post) throws ParseException {
         mPost = post;
 
         loadPostDetails();
@@ -68,7 +69,7 @@ class PostHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private void loadPostDetails(){
+    private void loadPostDetails() throws ParseException {
 
         app.tvDescription.setText(mPost.getDescription());
         app.tvUsername.setText(mPost.getUser().getUsername());
@@ -116,7 +117,11 @@ class PostHolder extends RecyclerView.ViewHolder {
                 app.btnLike.setImageResource(R.drawable.ufi_heart_active);
                 mCurrentUser.likePost(mPost);
             }
-            showLikes(mPost);
+            try {
+                showLikes(mPost);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
         });
 
@@ -130,9 +135,9 @@ class PostHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    private void showLikes(Post post) {
+    private void showLikes(Post post) throws ParseException {
         if(post.getLikes()>0){
-            app.tvUserLike.setText(post.getUserLikes().get(0).getUsername());
+            app.tvUserLike.setText(post.getUserLikes().get(0).fetchIfNeeded().getUsername());
             app.clLikedBy.setVisibility(View.VISIBLE);
             if(post.getLikes()>1){
                 app.tvLikes.setText(String.format(Locale.US,"%d others.", post.getLikes() - 1));
